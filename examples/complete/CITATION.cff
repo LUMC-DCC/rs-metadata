@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+title: ReadAligner
+message: "If you use this software, please cite it using the metadata in this file."
+type: software
+abstract: >-
+  A command-line tool for aligning short sequencing reads to a reference
+  genome. It is tuned for low-coverage clinical samples, where standard
+  aligners lose sensitivity, and emits both BAM and CRAM output with
+  per-region quality summaries.
+authors:
+  - family-names: Carberry
+    given-names: Josiah
+    email: j.carberry@example-lumc.nl
+    orcid: https://orcid.org/0000-0002-1825-0097
+    affiliation: Leiden University Medical Center
+  - name: Leiden University Medical Center
+# Quote the version: an unquoted 2.10 would be read as the number 2.1.
+version: "2.1.0"
+date-released: "2026-06-01"
+doi: 10.5281/zenodo.0000000
+identifiers:
+  - type: url
+    value: https://bio.tools/readaligner
+    description: bio.tools registry entry
+repository-code: https://github.com/lumc-example/readaligner
+url: https://lumc-example.github.io/readaligner
+license: Apache-2.0
+keywords:
+  - genomics
+  - read alignment
+  - low coverage
+  - Homo sapiens
+contact:
+  - family-names: Carberry
+    given-names: Josiah
+    email: j.carberry@example-lumc.nl
+preferred-citation:
+  type: article
+  title: "Fast and accurate short read alignment"
+  doi: 10.1093/bioinformatics/btp352
+  authors:
+    - family-names: Carberry
+      given-names: Josiah

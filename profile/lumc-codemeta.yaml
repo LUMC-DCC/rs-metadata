@@ -1,0 +1,143 @@
+# The LUMC CodeMeta profile.
+#
+# This file is the profile. It names the vocabularies it builds on, the fields
+# a record must carry, the fields it should carry, and how many values each
+# takes.
+#
+# Nothing else belongs here. Value types, property descriptions, class
+# hierarchies and node shapes are all read from the vocabularies themselves,
+# and the published JSON Schema is generated from this file plus those:
+#
+#     poetry run python scripts/build_schema.py
+#
+# Fields from the base vocabulary are written bare; anything from another
+# vocabulary carries its prefix. Adding a vocabulary means adding an entry
+# under `vocabularies` and prefixing its fields.
+
+name: LUMC CodeMeta profile
+version: 1.0.0
+
+vocabularies:
+  # The first entry is the base vocabulary. Its fields are written bare here
+  # and in the record, because its context defines them; every other
+  # vocabulary keeps its prefix in both places.
+  #
+  # `prefix` is that prefix.
+  # `properties` is where property names, types and definitions come from.
+  # `classes` is where node shapes and the class hierarchy come from, which is
+  # what lets a ScholarlyArticle satisfy a property typed CreativeWork.
+  #
+  # Where two define the same property the first also wins on type: CodeMeta
+  # narrows schema.org for its own profile, typing `maintainer` as Person
+  # where schema.org allows Person or Organization.
+  - prefix: codemeta
+    version: "3.1"
+    context: https://w3id.org/codemeta/3.1
+    properties: https://raw.githubusercontent.com/codemeta/codemeta/3.1/properties_description.csv
+    documentation: https://codemeta.github.io/terms/
+
+  - prefix: schema
+    version: current
+    properties: https://schema.org/version/latest/schemaorg-current-https.jsonld
+    classes: https://schema.org/version/latest/schemaorg-current-https.jsonld
+    documentation: https://schema.org/
+
+# Absent, these are errors. Cardinality is `one` or `many`, and is the one
+# thing no vocabulary states: software has a single name, and can have several
+# authors. A `one` field may still be written as a one-element array, since
+# JSON-LD treats the two as identical.
+required:
+  name: one
+  description: one
+  version: one
+  identifier: many
+  author: many
+  license: many
+  codeRepository: many
+  programmingLanguage: many
+  applicationCategory: many
+  schema:featureList: many
+
+# Absent, these produce a single aggregated warning.
+recommended:
+  applicationSubCategory: many
+  continuousIntegration: many
+  datePublished: one
+  developmentStatus: one
+  funding: many
+  issueTracker: many
+  keywords: many
+  maintainer: many
+  operatingSystem: many
+  referencePublication: many
+  releaseNotes: many
+  runtimePlatform: many
+  softwareHelp: many
+  softwareRequirements: many
+  supportingData: many
+
+# The node classes this profile uses, and which of their properties are worth
+# describing. schema.org gives every class a long inherited property list —
+# Person has 81, CreativeWork 129 — so listing the ones that matter here keeps
+# the generated schema readable and gives editors useful completion.
+#
+# Types come from the vocabulary, never from this file. Properties left out are
+# still allowed; the schema never sets additionalProperties to false.
+#
+# Which classes are needed is itself derived: the generator fails if a class a
+# profile field can hold is missing from this list.
+types:
+  Person:
+    properties: [name, givenName, familyName, email, affiliation, identifier]
+  Organization:
+    properties: [name, url, email, identifier, address]
+  CreativeWork:
+    properties: [name, url, description, identifier, version, author, license]
+  ScholarlyArticle:
+    properties: [name, url, description, identifier, author, datePublished]
+  SoftwareSourceCode:
+    properties: [name, url, description, identifier, version, programmingLanguage]
+  DataFeed:
+    properties: [name, url, description, identifier]
+  PropertyValue:
+    properties: [name, value, propertyID, url]
+  ComputerLanguage:
+    properties: [name, url, version]
+
+# Optional. Each field is described with its vocabulary's own definition, which
+# suits an editor tooltip but often does not tell someone how to fix their
+# file: schema.org defines `version` as "the version of the CreativeWork
+# embodied by a specified resource". Anything written here replaces that as the
+# remediation text. Fields left out fall back to the vocabulary.
+help:
+  version: >-
+    A semantic version is preferred. For software with no releases, a full Git
+    commit hash identifies the state exactly.
+  identifier: >-
+    A persistent identifier for this release. A DOI is preferred; mint one by
+    publishing a release with the Zenodo-GitHub integration enabled. A Git tag
+    URL is accepted for software that will never be formally published.
+  license: >-
+    An SPDX identifier URL, for example https://spdx.org/licenses/Apache-2.0.
+    For a license with no SPDX identifier, use a CreativeWork node carrying its
+    name and URL.
+  author: >-
+    Everyone who should be credited, in citation order. Give each person an
+    ORCID in `@id`, and each affiliation a ROR in its own `@id`.
+  applicationCategory: >-
+    The kind of software. A term from the bio.tools tool-type vocabulary makes
+    the record discoverable in that registry.
+  schema:featureList: >-
+    What the software does. EDAM operation URLs drive semantic search in
+    bio.tools and ELIXIR infrastructure; free text is accepted when no term
+    fits. Keep the `schema:` prefix.
+  developmentStatus: >-
+    One of the repostatus.org terms, written as the bare term: concept, wip,
+    suspended, abandoned, active, inactive, unsupported or moved.
+
+# Spellings that mean the same property after JSON-LD expansion, and are
+# therefore accepted in its place.
+aliases:
+  schema:featureList:
+    - http://schema.org/featureList
+    - https://schema.org/featureList

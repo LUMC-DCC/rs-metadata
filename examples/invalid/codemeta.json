@@ -1,0 +1,37 @@
+{
+  "@context": [
+    "https://w3id.org/codemeta/3.1",
+    { "schema": "https://schema.org/" }
+  ],
+  "@type": "SoftwareSourceCode",
+
+  "name": "BrokenExample",
+  "description": "Every problem in this file is deliberate. See examples/invalid/README.md for what each one demonstrates and which diagnostic it produces.",
+  "version": "1.4.0",
+
+  "identifier": "https://doi.org/10.0000/example.mytool.1",
+
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0000-0000-0000",
+      "givenName": "Jane",
+      "familyName": "Doe",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Leiden University Medical Center"
+      }
+    }
+  ],
+
+  "license": "Apache-2.0",
+  "codeRepository": "https://github.com/example/mytool",
+  "programingLanguage": ["Python"],
+
+  "featureList": [
+    "http://edamontology.org/topic_0622",
+    "https://edamontology.org/operation_0292"
+  ],
+
+  "developmentStatus": "actively maintained"
+}

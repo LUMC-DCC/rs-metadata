@@ -1,0 +1,403 @@
+{
+  "$comment": "CodeMeta's own crosswalk tables, one per mapping that has an upstream. They state which source field corresponds to which CodeMeta property; the comparison policy for each is decided in src/rs_metadata/mappings and is not upstream.",
+  "crosswalks": {
+    "cargo": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Cargo.csv",
+      "format": "CodeMeta crosswalk: Cargo",
+      "properties": {
+        "codeRepository": [
+          "package.repository"
+        ],
+        "softwareRequirements": [
+          "dependencies, dev-dependencies, build-dependencies"
+        ],
+        "author": [
+          "package.authors"
+        ],
+        "contributor": [
+          "package.authors"
+        ],
+        "keywords": [
+          "package.keyword"
+        ],
+        "license": [
+          "package.license"
+        ],
+        "version": [
+          "package.version"
+        ],
+        "name": [
+          "package.authors"
+        ],
+        "url": [
+          "package.homepage"
+        ],
+        "relatedLink": [
+          "package.documentation"
+        ],
+        "email": [
+          "package.authors"
+        ],
+        "maintainer": [
+          "package.authors"
+        ],
+        "issueTracker": [
+          "badges.is-it-maintained-open-issues"
+        ],
+        "readme": [
+          "package.readme"
+        ]
+      }
+    },
+    "cff-1.2.0": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Citation%20File%20Format%201.2.0.csv",
+      "format": "CodeMeta crosswalk: Citation File Format",
+      "properties": {
+        "codeRepository": [
+          "repository-code"
+        ],
+        "downloadUrl": [
+          "(repository-artifact) / (url) / (repository) / (identifiers[i].type==url)"
+        ],
+        "softwareRequirements": [
+          "references"
+        ],
+        "softwareVersion": [
+          "version"
+        ],
+        "author": [
+          "authors"
+        ],
+        "citation": [
+          "preferred-citation / references"
+        ],
+        "datePublished": [
+          "date-released"
+        ],
+        "keywords": [
+          "keywords"
+        ],
+        "license": [
+          "license / license-url"
+        ],
+        "version": [
+          "version"
+        ],
+        "isPartOf": [
+          "(identifiers)"
+        ],
+        "hasPart": [
+          "(identifiers)"
+        ],
+        "description": [
+          "abstract"
+        ],
+        "identifier": [
+          "identifiers / person.orcid / doi",
+          "person.orcid / identifiers / doi"
+        ],
+        "name": [
+          "title",
+          "entity.name"
+        ],
+        "sameAs": [
+          "identifiers.url"
+        ],
+        "url": [
+          "url / (repository) / (repository-code) / (repository-artifact) / (identifiers[i].type==url)"
+        ],
+        "relatedLink": [
+          "url / (repository) / (repository-code) / (repository-artifact) / (identifiers[i].type==url)"
+        ],
+        "givenName": [
+          "person.given-names"
+        ],
+        "familyName": [
+          "person.family-names"
+        ],
+        "email": [
+          "person.email / entity.email"
+        ],
+        "affiliation": [
+          "person.affiliation"
+        ],
+        "address": [
+          "person.address / entity.address"
+        ],
+        "softwareSuggestions": [
+          "(references)"
+        ],
+        "referencePublication": [
+          "preferred-citation"
+        ]
+      }
+    },
+    "github": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/GitHub.csv",
+      "format": "CodeMeta crosswalk: GitHub",
+      "properties": {
+        "codeRepository": [
+          "html_url"
+        ],
+        "programmingLanguage": [
+          "languages_url"
+        ],
+        "downloadUrl": [
+          "archive_url"
+        ],
+        "author": [
+          "login"
+        ],
+        "dateCreated": [
+          "created_at"
+        ],
+        "dateModified": [
+          "updated_at"
+        ],
+        "keywords": [
+          "topics"
+        ],
+        "license": [
+          "license"
+        ],
+        "description": [
+          "description"
+        ],
+        "identifier": [
+          "id"
+        ],
+        "name": [
+          "full_name"
+        ],
+        "issueTracker": [
+          "issues_url"
+        ]
+      }
+    },
+    "julia-project": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Julia%20Project.csv",
+      "format": "CodeMeta crosswalk: Julia Project.toml",
+      "properties": {
+        "runtimePlatform": [
+          "compat.julia"
+        ],
+        "softwareVersion": [
+          "version"
+        ],
+        "identifier": [
+          "uuid"
+        ],
+        "name": [
+          "name"
+        ]
+      }
+    },
+    "package-json": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/NodeJS.csv",
+      "format": "CodeMeta crosswalk: NodeJS",
+      "properties": {
+        "codeRepository": [
+          "repository"
+        ],
+        "runtimePlatform": [
+          "engines"
+        ],
+        "operatingSystem": [
+          "os"
+        ],
+        "processorRequirements": [
+          "cpu"
+        ],
+        "softwareRequirements": [
+          "dependencies / bundledDependencies / bundleDependencies / peerDependencies"
+        ],
+        "author": [
+          "author"
+        ],
+        "contributor": [
+          "contributors"
+        ],
+        "keywords": [
+          "keywords"
+        ],
+        "license": [
+          "license"
+        ],
+        "version": [
+          "version"
+        ],
+        "description": [
+          "description"
+        ],
+        "identifier": [
+          "name"
+        ],
+        "name": [
+          "name",
+          "author.name"
+        ],
+        "url": [
+          "homepage"
+        ],
+        "email": [
+          "author.email"
+        ],
+        "softwareSuggestions": [
+          "devDependencies / optionalDependencies"
+        ],
+        "issueTracker": [
+          "bugs"
+        ]
+      }
+    },
+    "pyproject-pep621": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Python%20PKG-INFO.csv",
+      "format": "CodeMeta crosswalk: Python PKG-INFO",
+      "properties": {
+        "downloadUrl": [
+          "Download-URL"
+        ],
+        "softwareRequirements": [
+          "Requires"
+        ],
+        "author": [
+          "Author"
+        ],
+        "keywords": [
+          "Keywords"
+        ],
+        "license": [
+          "License"
+        ],
+        "version": [
+          "Version"
+        ],
+        "description": [
+          "Summary / Description"
+        ],
+        "name": [
+          "Name"
+        ],
+        "url": [
+          "Home-Page"
+        ],
+        "email": [
+          "Author-email"
+        ]
+      }
+    },
+    "r-description": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/R%20Package%20Description.csv",
+      "format": "CodeMeta crosswalk: R Package Description",
+      "properties": {
+        "codeRepository": [
+          "URL"
+        ],
+        "softwareRequirements": [
+          "Depends, SystemRequirements"
+        ],
+        "softwareVersion": [
+          "Version"
+        ],
+        "author": [
+          "[aut] in Author"
+        ],
+        "contributor": [
+          "[ctb] in Author"
+        ],
+        "datePublished": [
+          "Date"
+        ],
+        "license": [
+          "License"
+        ],
+        "version": [
+          "Version"
+        ],
+        "description": [
+          "Description"
+        ],
+        "identifier": [
+          "Package"
+        ],
+        "name": [
+          "Title"
+        ],
+        "url": [
+          "URL"
+        ],
+        "givenName": [
+          "givenName"
+        ],
+        "familyName": [
+          "familyName"
+        ],
+        "email": [
+          "email"
+        ],
+        "softwareSuggestions": [
+          "Suggests"
+        ],
+        "maintainer": [
+          "Maintainer"
+        ],
+        "issueTracker": [
+          "BugReports"
+        ]
+      }
+    },
+    "zenodo": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Zenodo.csv",
+      "format": "CodeMeta crosswalk: Zenodo",
+      "properties": {
+        "codeRepository": [
+          "related_identifiers.isSupplementTo"
+        ],
+        "applicationCategory": [
+          "communities"
+        ],
+        "downloadUrl": [
+          "related_identifiers.isIdenticalTo"
+        ],
+        "author": [
+          "creators"
+        ],
+        "datePublished": [
+          "publication_date"
+        ],
+        "funder": [
+          "contributors.Funder"
+        ],
+        "keywords": [
+          "keywords"
+        ],
+        "license": [
+          "license"
+        ],
+        "version": [
+          "version"
+        ],
+        "description": [
+          "description"
+        ],
+        "identifier": [
+          "id",
+          "ORCID"
+        ],
+        "name": [
+          "title",
+          "name"
+        ],
+        "affiliation": [
+          "affiliation"
+        ],
+        "funding": [
+          "grants"
+        ],
+        "issueTracker": [
+          "related_identifiers.isSupplementedBy"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+name: False alarm
+description: rs-metadata reported a problem with metadata that is actually correct
+labels: ["false-alarm"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A false alarm is the failure this project cares most about.
+
+  - type: input
+    id: code
+    attributes:
+      label: Diagnostic code
+      description: The code in brackets in the finding, for example `profile.invalid-value`.
+      placeholder: consistency.mismatch
+    validations:
+      required: true
+
+  - type: textarea
+    id: finding
+    attributes:
+      label: What rs-metadata reported
+      description: >
+        Include the whole finding, including the file, line and suggested fix.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: metadata
+    attributes:
+      label: The metadata that triggered it
+      description: >
+        The smallest excerpt that still reproduces it: the property and its
+        value from each file involved. Redact anything you cannot share; a
+        realistic stand-in is fine as long as it still reproduces.
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why the metadata is correct
+      description: >
+        What makes this valid: a spec that permits it, a convention in your
+        ecosystem, or a link to a published record that does the same. This is
+        the part that decides the fix, so it matters more than the rest.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `rs-metadata --version`.
+    validations:
+      required: true

@@ -1,0 +1,134 @@
+name: "rs-metadata"
+description: >-
+  Validate research software metadata against the LUMC CodeMeta profile and
+  check that codemeta.json agrees with CITATION.cff and your packaging
+  metadata.
+author: "Leiden University Medical Center"
+
+branding:
+  icon: check-circle
+  color: blue
+
+# The common case needs no configuration at all. Every input below is an
+# escape hatch for a repository that cannot be laid out the way the profile
+# describes; none of them should be needed in an ordinary project.
+inputs:
+  codemeta:
+    description: >-
+      Path to the anchor record, relative to working-directory. Only needed if
+      codemeta.json is not in the repository root, which is where every
+      consumer looks for it. Shorthand for `sources: codemeta=PATH`.
+    required: false
+    default: ""
+  sources:
+    description: >-
+      Paths to metadata files kept outside the repository root, one ID=PATH
+      per line, for a monorepo whose packaging metadata lives in a
+      subdirectory. Ids: codemeta, cff, pyproject, package-json, r-description.
+      For example:
+        sources: |
+          pyproject=backend/pyproject.toml
+          package-json=frontend/package.json
+    required: false
+    default: ""
+  working-directory:
+    description: "Directory to validate. Defaults to the repository root."
+    required: false
+    default: "."
+  fail-on:
+    description: >-
+      Lowest severity that fails the job: error, warning or never. Warnings are
+      guidance and are non-fatal by default.
+    required: false
+    default: "error"
+  report:
+    description: "Path the machine-readable JSON report is written to."
+    required: false
+    default: "rs-metadata-report.json"
+  upload-report:
+    description: >-
+      Upload the JSON report as a build artifact. Set to false if this job runs
+      in a matrix: artifact names must be unique within a workflow run, so
+      several jobs uploading the same name will fail.
+    required: false
+    default: "true"
+  artifact-name:
+    description: "Name of the uploaded artifact."
+    required: false
+    default: "rs-metadata-report"
+  python-version:
+    description: "Python version used to run the validator."
+    required: false
+    default: "3.12"
+
+outputs:
+  status:
+    description: "passed, passed-with-warnings, or failed."
+    value: ${{ steps.validate.outputs.status }}
+  errors:
+    description: "Number of errors found."
+    value: ${{ steps.validate.outputs.errors }}
+  warnings:
+    description: "Number of warnings found."
+    value: ${{ steps.validate.outputs.warnings }}
+  notes:
+    description: "Number of informational findings."
+    value: ${{ steps.validate.outputs.notes }}
+  report-path:
+    description: "Path to the JSON report."
+    value: ${{ inputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install rs-metadata
+      shell: bash
+      run: |
+        set -euo pipefail
+        # Installed into a dedicated virtual environment so the action cannot
+        # disturb the dependencies of the repository being validated.
+        python -m venv "${RUNNER_TEMP}/rs-metadata-venv"
+        "${RUNNER_TEMP}/rs-metadata-venv/bin/python" -m pip install \
+          --disable-pip-version-check --quiet --upgrade pip
+        "${RUNNER_TEMP}/rs-metadata-venv/bin/python" -m pip install \
+          --disable-pip-version-check --quiet "${GITHUB_ACTION_PATH}"
+
+    - name: Validate metadata
+      id: validate
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        RS_METADATA_CODEMETA: ${{ inputs.codemeta }}
+        RS_METADATA_SOURCES: ${{ inputs.sources }}
+        RS_METADATA_FAIL_ON: ${{ inputs.fail-on }}
+        RS_METADATA_REPORT: ${{ inputs.report }}
+      run: |
+        set -euo pipefail
+        args=(validate . --format github --fail-on "${RS_METADATA_FAIL_ON}")
+        args+=(--report "${RS_METADATA_REPORT}")
+        if [ -n "${RS_METADATA_CODEMETA}" ]; then
+          args+=(--codemeta "${RS_METADATA_CODEMETA}")
+        fi
+        # One ID=PATH per line. Blank lines are skipped so the YAML block can
+        # be indented and spaced for readability.
+        while IFS= read -r source; do
+          [ -n "${source}" ] || continue
+          args+=(--source "${source}")
+        done <<< "${RS_METADATA_SOURCES}"
+        "${RUNNER_TEMP}/rs-metadata-venv/bin/rs-metadata" "${args[@]}"
+
+    - name: Upload report
+      # Runs even when validation failed: the report is most useful precisely
+      # when something is wrong.
+      if: ${{ always() && inputs.upload-report == 'true' }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.working-directory }}/${{ inputs.report }}
+        if-no-files-found: warn
+        retention-days: 30

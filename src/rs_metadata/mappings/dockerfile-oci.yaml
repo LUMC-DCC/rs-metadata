@@ -1,0 +1,89 @@
+# Crosswalk: Dockerfile OCI image labels <-> CodeMeta
+#
+# A Dockerfile is a build script, but its `org.opencontainers.image.*` labels
+# are a specified metadata vocabulary that ends up baked into every published
+# image. When they disagree with codemeta.json, the image on a registry is
+# describing the software differently from the repository it came from.
+id: dockerfile-oci
+format: Dockerfile (OCI image labels)
+formatVersion: null
+
+provenance:
+  origin: rs-metadata
+  source: https://github.com/opencontainers/image-spec/blob/main/annotations.md
+  retrieved: "2026-08-19"
+  notes: >
+    The label names are the OCI image specification's pre-defined annotation
+    keys; the correspondence to CodeMeta is rs-metadata's own. Keys describing
+    the image build rather than the software — `created`, `revision`,
+    `ref.name`, `base.name`, `base.digest` — are not mapped. Labels whose
+    value interpolates a build argument are not read at all, since this file
+    does not determine them.
+
+fields:
+  - property: name
+    source: org.opencontainers.image.title
+    strategy: name
+    rule: equal
+    severity: warning
+
+  - property: version
+    source: org.opencontainers.image.version
+    strategy: version
+    rule: equal
+    severity: warning
+    note: >
+      A warning rather than an error: image labels are commonly set from a CI
+      tag at build time, so a literal value here can legitimately lag the
+      repository between releases.
+
+  - property: license
+    source: org.opencontainers.image.licenses
+    strategy: spdx
+    rule: equal
+    severity: error
+    note: >
+      The specification requires an SPDX expression, so a difference here is a
+      real contradiction rather than a formatting difference.
+
+  - property: codeRepository
+    source: org.opencontainers.image.source
+    strategy: uri
+    rule: equal
+    severity: error
+
+  - property: url
+    source: org.opencontainers.image.url
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: softwareHelp
+    source: org.opencontainers.image.documentation
+    strategy: uri
+    rule: subset
+    severity: info
+
+  - property: author
+    source: org.opencontainers.image.authors
+    strategy: people
+    rule: subset
+    severity: info
+    anchorProperties: [author, maintainer]
+    note: >
+      The specification calls this field "contact details", so it usually
+      names whoever maintains the image rather than everyone who wrote the
+      software. Subset, and only informational.
+
+  - property: copyrightHolder
+    source: org.opencontainers.image.vendor
+    strategy: name
+    rule: subset
+    severity: info
+
+  - property: description
+    source: org.opencontainers.image.description
+    comparable: false
+    reason: >
+      The label is a short registry blurb, while CodeMeta's description is the
+      full abstract. Comparing them would differ on nearly every image.

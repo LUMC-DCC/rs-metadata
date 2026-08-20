@@ -1,0 +1,175 @@
+# Crosswalk: .zenodo.json <-> CodeMeta
+#
+# Of every companion file, this is the one where drift costs the most. Zenodo
+# reads it at archive time and mints a DOI from what it says; the resulting
+# citation cannot be corrected afterwards. Rules here are therefore strict —
+# closer to CITATION.cff than to a packaging manifest.
+id: zenodo
+format: Zenodo deposition metadata
+formatVersion: null
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/Zenodo.csv
+  retrieved: "2026-08-20"
+  notes: >
+    Field correspondences follow the CodeMeta project's own Zenodo crosswalk.
+    The contributor-role breakdown extends it: Zenodo's roles are DataCite's
+    and are broader than CodeMeta's, so a role with no CodeMeta equivalent is
+    left unmapped rather than flattened into `contributor`. The comparison
+    policy is rs-metadata's.
+
+upstream:
+  omitted:
+    funder: >
+      Upstream maps this to `contributors.Funder`, but `Funder` is not one
+      of the contributor types Zenodo's own schema permits, so no valid
+      record can carry it. Funding is read from `grants` instead.
+    identifier: >
+      Upstream maps this to Zenodo's internal record `id`, a per-deposition
+      integer. The DOI is what identifies the software to anything outside
+      Zenodo, so the `identifier` rule below reads `doi` instead.
+    applicationCategory: >
+      Upstream maps this to `communities`. A Zenodo community is a curated
+      collection a record was submitted to, not a category of software, and
+      the two vocabularies share no terms — comparing them would differ on
+      every correct record.
+    issueTracker: >
+      Upstream maps this to `related_identifiers.isSupplementedBy`, a generic
+      relation that names any supplementing resource. Nothing marks one of
+      them as an issue tracker, so a value read from it would be arbitrary.
+
+fields:
+  - property: name
+    source: title
+    strategy: name
+    rule: equal
+    severity: error
+    note: >
+      The title Zenodo will publish. A mismatch here means the archived record
+      names the software differently from its own repository.
+
+  - property: description
+    source: description
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      Zenodo renders this field as HTML, so it commonly carries markup that a
+      plain CodeMeta description does not. Shown, never judged.
+
+  - property: version
+    source: version
+    strategy: version
+    rule: equal
+    severity: error
+
+  - property: license
+    source: license
+    strategy: spdx
+    rule: equal
+    severity: error
+    note: >
+      Zenodo accepts SPDX identifiers case-insensitively, and older records
+      use lowercase Open Definition ids. Both normalize to the same value.
+
+  - property: author
+    source: creators
+    strategy: people
+    rule: equal
+    severity: error
+    anchorProperties: [author]
+    note: >
+      Equality rather than subset, unlike the packaging formats. Zenodo's
+      creators become the citation's author list, so someone credited in
+      codemeta.json but missing here will be missing from the citation.
+
+  - property: maintainer
+    source: contributors[type=ContactPerson]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: contributor
+    source: contributors[type=DataCurator|ProjectLeader|ProjectManager|ProjectMember|Researcher|Supervisor]
+    strategy: people
+    rule: subset
+    severity: info
+    note: >
+      Zenodo uses DataCite's role vocabulary, which is finer-grained than
+      CodeMeta's. The roles with no closer CodeMeta property land here.
+
+  - property: editor
+    source: contributors[type=Editor]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: producer
+    source: contributors[type=Producer]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: copyrightHolder
+    source: contributors[type=RightsHolder]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: sponsor
+    source: contributors[type=Sponsor]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: identifier
+    source: doi
+    strategy: doi
+    rule: equal
+    severity: error
+    note: >
+      A reserved DOI in .zenodo.json is the identifier the archived record
+      will carry, so it should be the one codemeta.json advertises.
+
+  - property: codeRepository
+    source: related_identifiers[relation=isSupplementTo]
+    strategy: uri
+    rule: equal
+    severity: warning
+    note: >
+      Zenodo has no repository field. The convention its crosswalk records is
+      an `isSupplementTo` relation pointing at the code, which is what this
+      reads.
+
+  - property: funding
+    source: grants
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      Zenodo writes a grant as a registry-prefixed id
+      (`10.13039/501100000780::283595`), while CodeMeta's funding is free
+      text. The two rarely match literally, so differences are shown rather
+      than judged.
+
+  - property: keywords
+    source: keywords
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: datePublished
+    source: publication_date
+    strategy: date
+    rule: equal
+    severity: warning
+    note: >
+      Zenodo defaults this to the deposition date when it is absent, so a
+      stale value here silently misdates the record.
+
+  - property: downloadUrl
+    source: related_identifiers[relation=isIdenticalTo]
+    strategy: uri
+    rule: subset
+    severity: info

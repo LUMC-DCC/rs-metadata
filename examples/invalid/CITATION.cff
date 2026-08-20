@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: BrokenExample
+message: "If you use this software, please cite it using the metadata in this file."
+type: software
+authors:
+  - family-names: Smith
+    given-names: John
+version: 1.2.0
+repository-code: https://github.com/example/a-different-repository
+license: MIT

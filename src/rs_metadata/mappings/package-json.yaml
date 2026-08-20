@@ -1,0 +1,130 @@
+# Crosswalk: npm package.json <-> CodeMeta
+id: package-json
+format: npm package metadata
+formatVersion: "package.json"
+
+provenance:
+  origin: codemeta-upstream
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/NodeJS.csv
+  retrieved: "2026-08-14"
+  notes: >
+    Field correspondences follow the CodeMeta project's NodeJS crosswalk. The
+    handling of npm's shorthand repository forms (`user/repo`,
+    `github:user/repo`, `git+https://...git`) is an rs-metadata addition.
+
+upstream:
+  omitted:
+    identifier: >
+      Upstream maps this to npm's `name`. A package name identifies the
+      software within one registry, while codemeta.json's `identifier` is the
+      DOI that identifies it everywhere; comparing the two would report a
+      difference on every correct pair. The name is compared as `name`.
+
+fields:
+  - property: name
+    source: name
+    strategy: name
+    rule: equal
+    severity: warning
+    note: >
+      npm names are lowercase and may be scoped (`@lumc/mytool`); the
+      comparison ignores the scope and separators.
+
+  - property: version
+    source: version
+    strategy: version
+    rule: equal
+    severity: error
+
+  - property: license
+    source: license
+    strategy: spdx
+    rule: equal
+    severity: error
+
+  - property: codeRepository
+    source: repository
+    strategy: uri
+    rule: equal
+    severity: error
+
+  - property: url
+    source: homepage
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: issueTracker
+    source: bugs
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: author
+    source: author, contributors
+    strategy: people
+    rule: subset
+    severity: warning
+    anchorProperties: [author, maintainer]
+    note: >
+      npm's single `author` plus `contributors` is compared against CodeMeta's
+      `author` and `maintainer` taken together, because the two ecosystems
+      draw the line between the roles differently.
+
+  - property: keywords
+    source: keywords
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: description
+    source: description
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      npm descriptions are one-liners shown in search results, so a difference
+      from the CodeMeta abstract is expected and merely reported.
+
+  - property: softwareRequirements
+    source: dependencies, peerDependencies
+    strategy: dependency-set
+    rule: informational
+    severity: info
+
+  - property: runtimePlatform
+    source: engines
+    strategy: text
+    rule: informational
+    severity: info
+
+  - property: operatingSystem
+    source: os
+    strategy: text
+    rule: overlap
+    severity: info
+
+  - property: contributor
+    source: contributors
+    strategy: people
+    rule: subset
+    severity: info
+    anchorProperties: [contributor, author]
+    note: >
+      npm draws a line between `author` and `contributors` that codemeta.json
+      need not draw the same way, so someone listed here satisfies either.
+
+  - property: softwareSuggestions
+    source: devDependencies / optionalDependencies
+    strategy: dependency-set
+    rule: informational
+    severity: info
+    note: >
+      What the package can use but does not need to run, which is the
+      distinction CodeMeta draws. Never an error.
+
+  - property: processorRequirements
+    source: cpu
+    strategy: best-effort
+    rule: overlap
+    severity: info

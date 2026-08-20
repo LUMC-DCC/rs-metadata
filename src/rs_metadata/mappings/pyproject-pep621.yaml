@@ -1,0 +1,160 @@
+# Crosswalk: PEP 621 [project] metadata (pyproject.toml) <-> CodeMeta
+#
+# Packaging metadata answers "how do I install this", while codemeta.json
+# answers "what is this and who made it". The two overlap but are not
+# redundant, so most rules here are deliberately looser than for CITATION.cff:
+# a Python project that lists one author in pyproject.toml and five in
+# codemeta.json is normal, not broken.
+id: pyproject-pep621
+format: Python project metadata (PEP 621)
+formatVersion: "PEP 621"
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/Python%20PKG-INFO.csv
+  retrieved: "2026-08-14"
+  notes: >
+    CodeMeta publishes crosswalks for Python PKG-INFO and setuptools, but not
+    for PEP 621 itself. PEP 621's [project] table is defined by reference to
+    core metadata, so the field correspondences below follow the upstream
+    PKG-INFO crosswalk. The project.urls label conventions, the handling of
+    `dynamic`, and the PEP 639 license forms are rs-metadata additions with no
+    upstream equivalent.
+
+fields:
+  - property: name
+    source: project.name
+    strategy: name
+    rule: equal
+    severity: warning
+    note: >
+      Compared with separators removed, because `MyTool` in codemeta.json and
+      `my-tool` on PyPI are the same software named by two conventions.
+
+  - property: version
+    source: project.version
+    strategy: version
+    rule: equal
+    severity: error
+    note: >
+      Skipped entirely when the project declares `dynamic = ["version"]`,
+      since the value in the file is then not the version at all.
+
+  - property: license
+    source: project.license
+    strategy: spdx
+    rule: equal
+    severity: error
+    note: >
+      Handles the PEP 639 SPDX expression string and the older
+      `{text = "..."}` table. `{file = "LICENSE"}` names a file rather than a
+      license and is reported as not comparable.
+
+  - property: author
+    source: project.authors
+    strategy: people
+    rule: subset
+    severity: warning
+    anchorProperties: [author, maintainer]
+    note: >
+      Subset rather than equality: packaging metadata commonly names only the
+      current maintainer, while codemeta.json lists everyone who should be
+      credited. Anyone named in pyproject.toml should still appear in the
+      canonical record.
+
+  - property: maintainer
+    source: project.maintainers
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: codeRepository
+    source: project.urls.Repository
+    strategy: uri
+    rule: equal
+    severity: error
+
+  - property: url
+    source: project.urls.Homepage
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: issueTracker
+    source: project.urls.Issues
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: softwareHelp
+    source: project.urls.Documentation
+    strategy: uri
+    rule: subset
+    severity: warning
+
+  - property: keywords
+    source: project.keywords
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: runtimePlatform
+    source: project.requires-python
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      The interpreter the software runs on, which is what npm's `engines` and
+      Julia's `compat.julia` record for theirs. Recorded as `Python >=3.11`,
+      matching how those two are written.
+
+  - property: programmingLanguage
+    source: project.classifiers "Programming Language"
+    strategy: language
+    rule: overlap
+    severity: warning
+    note: >
+      A pyproject.toml is prima facie evidence that the software is written in
+      Python; this catches a codemeta.json that forgot to say so.
+
+  - property: softwareRequirements
+    source: project.dependencies
+    strategy: dependency-set
+    rule: informational
+    severity: info
+    note: >
+      Never an error. codemeta.json is not obliged to enumerate every
+      dependency, and a partial list is not a contradiction. Only a package
+      pinned to genuinely incompatible constraints in both files is reported
+      as a conflict.
+
+  - property: developmentStatus
+    source: project.classifiers "Development Status"
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      Trove development-status classifiers and the repostatus.org vocabulary
+      used by CodeMeta do not correspond one to one, so differences are shown
+      but never judged.
+
+  - property: operatingSystem
+    source: project.classifiers "Operating System"
+    strategy: text
+    rule: informational
+    severity: info
+
+  - property: description
+    source: project.description
+    comparable: false
+    reason: >
+      PEP 621's `description` is the one-line summary that corresponds to core
+      metadata's `Summary`, whereas CodeMeta's `description` is the full
+      abstract. Comparing them would report a difference on nearly every
+      correctly written project.
+
+  - property: downloadUrl
+    source: project.urls.Download
+    strategy: uri
+    rule: equal
+    severity: info

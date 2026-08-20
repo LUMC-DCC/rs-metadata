@@ -1,0 +1,67 @@
+name: Feature request
+description: Suggest something rs-metadata should be able to do
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a metadata file rs-metadata does not read yet, use **Metadata
+        format support** instead. Everything else belongs here.
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What you want to be able to do
+      description: >
+        The outcome rather than the implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: today
+    attributes:
+      label: What you do today instead
+      description: >
+        The workaround, the manual step, or the thing that goes unnoticed.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the project
+      description: A best guess is fine; it only helps with triage.
+      options:
+        - The profile: which fields are required, and their constraints
+        - A validation check on codemeta.json
+        - Comparison between files
+        - Command line
+        - GitHub Action
+        - Report output or its JSON schema
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strictness
+    attributes:
+      label: Would this make CI reject metadata it accepts today?
+      description: >
+        A new rule, a tightened constraint or a promoted severity can turn
+        every consuming repository red at once, so those need a migration
+        note and a major version. Say so if you are unsure.
+      options:
+        - "No — it only adds information, or relaxes something"
+        - "Yes — some currently passing repositories would start failing"
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: >
+        A proposed design, a specification that settles the question, or an
+        example of another tool doing it. Optional.

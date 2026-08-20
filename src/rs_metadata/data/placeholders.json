@@ -1,0 +1,20 @@
+{
+  "$comment": "Maintained by hand. Unlike the vendored vocabularies beside it, this file has no upstream: scripts/vendor_reference_data.py never writes it. Edit it directly and the change is a reviewable diff rather than a code change. Values that circulate in metadata templates and get left behind. A placeholder is worse than a missing field: it asserts an identifier that does not exist, and registries harvest it.",
+  "orcid": "0000-0000-0000-0000",
+  "doiPrefix": "10.0000/",
+  "hosts": [
+    "example.com",
+    "example.net",
+    "example.org"
+  ],
+  "patterns": {
+    "repository": {
+      "regex": "^https?://(?:www\\.)?(?:github|gitlab)\\.com/example/",
+      "$comment": "Warning only: an account really could be named 'example'."
+    },
+    "edamTerm": {
+      "regex": "^https?://edamontology\\.org/(?:operation|topic)_0000$",
+      "$comment": "EDAM's zero terms, used to stand for a real operation."
+    }
+  }
+}

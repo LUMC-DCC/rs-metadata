@@ -1,0 +1,138 @@
+# Crosswalk: Cargo.toml [package] <-> CodeMeta
+#
+# Cargo's [package] block is the metadata crates.io publishes, so it is a real
+# description of the software rather than only build configuration. Rules are
+# accordingly stricter than for a lockfile-style source, though still looser
+# than CITATION.cff: a crate names its current authors, while codemeta.json
+# credits everyone.
+id: cargo
+format: Rust package manifest
+formatVersion: null
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/Cargo.csv
+  retrieved: "2026-08-20"
+  notes: >
+    Field correspondences follow the CodeMeta project's own Cargo crosswalk.
+    The comparison policy is rs-metadata's, as is the handling of fields
+    inherited from a workspace (`version.workspace = true`), which state no
+    value in this file and are skipped rather than compared.
+
+upstream:
+  omitted:
+    contributor: >
+      Upstream maps this to `package.authors`, the same field it maps
+      `author` to. Cargo does not distinguish the two roles, so reading one
+      field as two concepts would report a single difference twice.
+    relatedLink: >
+      Upstream maps this to `package.documentation`, which is already
+      compared as `softwareHelp` — the concept that names a project's own
+      documentation.
+    readme: >
+      Upstream maps this to `package.readme`, which Cargo defines as a path
+      inside the crate (`README.md`). CodeMeta's `readme` is a URL, and a
+      path cannot be compared against one.
+    maintainer: >
+      Upstream maps this to `package.authors`, the same field it maps `author`
+      to, because Cargo does not distinguish the two. Rather than extract one
+      field as two concepts, the `author` rule below declares both as anchor
+      properties, so a Cargo author may satisfy either.
+    issueTracker: >
+      Upstream maps this to `badges.is-it-maintained-open-issues`. The
+      `[badges]` section is a third-party badge service's configuration rather
+      than an issue tracker URL, and crates.io no longer renders it, so there
+      is nothing here a codemeta.json `issueTracker` could be compared to.
+
+fields:
+  - property: name
+    source: package.name
+    strategy: name
+    rule: equal
+    severity: warning
+    note: >
+      Compared with separators removed: a crate published as `my-tool` and a
+      record calling it `MyTool` are the same software.
+
+  - property: version
+    source: package.version
+    strategy: version
+    rule: equal
+    severity: error
+
+  - property: description
+    source: package.description
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      Cargo's description is the one-line summary crates.io shows, which is
+      shorter than CodeMeta's abstract by design. Shown, never judged.
+
+  - property: license
+    source: package.license
+    strategy: spdx
+    rule: equal
+    severity: error
+    note: >
+      Cargo requires an SPDX expression here, so this is the one companion
+      whose license field is already in the form CodeMeta wants.
+
+  - property: author
+    source: package.authors
+    strategy: people
+    rule: subset
+    severity: warning
+    anchorProperties: [author, maintainer]
+
+  - property: codeRepository
+    source: package.repository
+    strategy: uri
+    rule: equal
+    severity: error
+
+  - property: url
+    source: package.homepage
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: softwareHelp
+    source: package.documentation
+    strategy: uri
+    rule: subset
+    severity: warning
+
+  - property: keywords
+    source: package.keywords
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: applicationCategory
+    source: package.categories
+    strategy: text
+    rule: overlap
+    severity: info
+    note: >
+      crates.io categories are a controlled vocabulary of application areas,
+      which is what applicationCategory describes. The two vocabularies do not
+      correspond term for term, so a difference is shown rather than judged.
+
+  - property: programmingLanguage
+    source: package
+    strategy: language
+    rule: overlap
+    severity: warning
+    note: >
+      A Cargo.toml is prima facie evidence that the crate is written in Rust;
+      this catches a codemeta.json that forgot to say so.
+
+  - property: softwareRequirements
+    source: dependencies
+    strategy: dependency-set
+    rule: informational
+    severity: info
+    note: >
+      Never an error. codemeta.json is not obliged to enumerate every crate a
+      build pulls in. Only genuinely incompatible pins are reported.

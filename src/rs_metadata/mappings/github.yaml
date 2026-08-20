@@ -1,0 +1,133 @@
+# Crosswalk: GitHub repository metadata <-> CodeMeta
+#
+# This is the copy of the metadata people actually see first: the description
+# under the repository name, the topics, the detected license. It is also the
+# copy nobody thinks to update, because it is edited in a web form rather than
+# committed alongside the code. Comparing it is the point.
+id: github
+format: GitHub repository metadata
+formatVersion: null
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/GitHub.csv
+  retrieved: "2026-08-20"
+  notes: >
+    Field correspondences follow the CodeMeta project's own GitHub crosswalk,
+    which is written against the REST API's repository object. Three of them
+    are read from a different field than upstream names, each noted below:
+    upstream's `full_name`, `languages_url` and `issues_url` are respectively
+    an owner-qualified name, an API endpoint and a URL template, none of which
+    hold a value comparable to what codemeta.json carries. The comparison
+    policy is rs-metadata's.
+
+upstream:
+  omitted:
+    downloadUrl: >
+      Upstream maps this to `archive_url`, which is a URL template
+      (`.../{archive_format}{/ref}`) rather than a download address. Nothing
+      resolvable can be read from it without inventing a ref.
+    identifier: >
+      Upstream maps this to GitHub's numeric repository `id`. That identifies
+      the repository inside GitHub, while codemeta.json's `identifier` is the
+      DOI that identifies the software outside it, so comparing the two would
+      differ on every correct pair.
+    author: >
+      Upstream maps this to the owner's `login`. A repository owner is not
+      necessarily an author — most research repositories here are owned by an
+      organization account — so reading it as authorship would credit the
+      wrong party and contradict a correct codemeta.json.
+
+fields:
+  - property: name
+    source: name
+    strategy: name
+    rule: equal
+    severity: warning
+    note: >
+      Read from `name` rather than upstream's `full_name`, which is
+      `owner/repo` and so never equals the software's own name.
+
+  - property: description
+    source: description
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      GitHub's description is the one-line blurb shown under the repository
+      name, while CodeMeta's is the full abstract. Shown, never judged.
+
+  - property: codeRepository
+    source: html_url
+    strategy: uri
+    rule: equal
+    severity: error
+    note: >
+      The one field GitHub is authoritative about. If codemeta.json points
+      somewhere else, it is describing a different repository.
+
+  - property: url
+    source: homepage
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: keywords
+    source: topics
+    strategy: text
+    rule: overlap
+    severity: warning
+    note: >
+      GitHub topics are lowercase and hyphenated by convention, so these are
+      compared case-insensitively like all other keyword sets.
+
+  - property: license
+    source: license.spdx_id
+    strategy: spdx
+    rule: equal
+    severity: warning
+    note: >
+      GitHub detects this from the LICENSE file rather than being told it, so
+      a difference can mean either file is wrong. A warning rather than an
+      error for that reason. `NOASSERTION`, which GitHub reports when its
+      detector recognized nothing, is not compared at all.
+
+  - property: programmingLanguage
+    source: language
+    strategy: language
+    rule: overlap
+    severity: info
+    note: >
+      Read from `language`, the language GitHub detected, rather than
+      upstream's `languages_url`, which is an endpoint to call rather than a
+      value. GitHub reports only the predominant language, so this is an
+      overlap check and never an error.
+
+  - property: issueTracker
+    source: html_url + "/issues"
+    strategy: uri
+    rule: equal
+    severity: info
+    note: >
+      Upstream maps `issues_url`, which is the API template
+      `.../issues{/number}` rather than the page a maintainer would record.
+      The tracker is the repository URL plus `/issues`, and is read only when
+      the repository has issues enabled.
+
+  - property: dateCreated
+    source: created_at
+    strategy: best-effort
+    rule: equal
+    severity: info
+    note: >
+      GitHub timestamps to the second while a metadata file records a day, so
+      these are compared on the calendar day.
+
+  - property: dateModified
+    source: updated_at
+    strategy: best-effort
+    rule: equal
+    severity: info
+    note: >
+      `updated_at` moves whenever the repository changes, so codemeta.json
+      will normally lag it. Shown for context, never judged as an error.

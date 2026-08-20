@@ -1,0 +1,59 @@
+# This is the workflow research-software repositories are meant to copy.
+#
+# It is kept here, running against examples/, so that the snippet quoted in the
+# README is proven to work on every commit rather than being documentation
+# that silently rots.
+name: Validate software metadata (examples)
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------
+  # What a research repository copies. Two steps, no configuration.
+  # ---------------------------------------------------------------------
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: ./ # in your repository: LUMC-DCC/rs-metadata@v1
+        with:
+          working-directory: examples/complete
+          artifact-name: rs-metadata-report-complete
+
+  # ---------------------------------------------------------------------
+  # Proof that the action fails when it should. Not something to copy.
+  # ---------------------------------------------------------------------
+  detects-broken-metadata:
+    name: Detects broken metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - id: broken
+        continue-on-error: true
+        uses: ./
+        with:
+          working-directory: examples/invalid
+          artifact-name: rs-metadata-report-invalid
+
+      - name: Assert the run failed with errors
+        env:
+          OUTCOME: ${{ steps.broken.outcome }}
+          STATUS: ${{ steps.broken.outputs.status }}
+          ERRORS: ${{ steps.broken.outputs.errors }}
+        run: |
+          set -euo pipefail
+          if [ "${OUTCOME}" != "failure" ] || [ "${STATUS}" != "failed" ]; then
+            echo "Expected examples/invalid to fail, got outcome=${OUTCOME} status=${STATUS}" >&2
+            exit 1
+          fi
+          echo "examples/invalid failed as expected with ${ERRORS} errors."

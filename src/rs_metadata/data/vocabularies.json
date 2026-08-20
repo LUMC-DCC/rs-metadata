@@ -1,0 +1,40 @@
+{
+  "developmentStatus": {
+    "source": "https://www.repostatus.org/badges/latest/ontology.jsonld",
+    "description": "repostatus.org vocabulary, used by CodeMeta for developmentStatus.",
+    "closed": true,
+    "terms": [
+      "abandoned",
+      "active",
+      "concept",
+      "inactive",
+      "moved",
+      "suspended",
+      "unsupported",
+      "wip"
+    ]
+  },
+  "applicationCategory": {
+    "source": "https://raw.githubusercontent.com/bio-tools/biotoolsSchema/main/jsonschema/biotoolsj.json",
+    "description": "The bio.tools toolType vocabulary. Preferred for applicationCategory; free text is permitted when no term fits.",
+    "closed": false,
+    "terms": [
+      "Bioinformatics portal",
+      "Command-line tool",
+      "Database portal",
+      "Desktop application",
+      "Library",
+      "Mobile application",
+      "Ontology",
+      "Plug-in",
+      "SPARQL endpoint",
+      "Script",
+      "Suite",
+      "Web API",
+      "Web application",
+      "Web service",
+      "Workbench",
+      "Workflow"
+    ]
+  }
+}

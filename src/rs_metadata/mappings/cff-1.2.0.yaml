@@ -1,0 +1,173 @@
+# Crosswalk: Citation File Format 1.2.0 <-> CodeMeta
+#
+# CITATION.cff is required alongside codemeta.json, so its
+# overlapping fields are held to the strictest standard of any source here.
+#
+# CFF is intentionally narrower than CodeMeta: it describes how to cite
+# software, not everything about it. Properties CodeMeta has and CFF does not
+# (programmingLanguage, applicationCategory, featureList) are simply absent
+# from this mapping and are never expected in CITATION.cff.
+id: cff-1.2.0
+format: Citation File Format
+formatVersion: "1.2.0"
+
+provenance:
+  origin: codemeta-upstream
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/Citation%20File%20Format%201.2.0.csv
+  retrieved: "2026-08-14"
+  notes: >
+    Field correspondences are taken from the CodeMeta project's own CFF 1.2.0
+    crosswalk table. The comparison rules and severities are rs-metadata's,
+    since a crosswalk states which concepts correspond but not how strictly
+    two files are expected to agree about them.
+
+upstream:
+  omitted:
+    softwareVersion: >
+      Upstream maps CFF's `version` to both `version` and
+      `softwareVersion`. This profile uses `version` for the release
+      identifier throughout, so the field is compared there once rather
+      than reported as two differences.
+    relatedLink: >
+      Upstream maps this to the same fields it maps `url` to. Reading one
+      field as two concepts would report a single difference twice.
+    isPartOf: >
+      Upstream writes this as `(identifiers)`, its notation for an
+      approximate correspondence. Nothing in a CFF identifier marks it as a
+      containing work, so any value read here would be a guess.
+    hasPart: >
+      As `isPartOf`: upstream's `(identifiers)` is approximate, and nothing
+      distinguishes a part from any other identifier.
+    softwareSuggestions: >
+      Upstream writes `(references)`, approximate. A CFF reference list is a
+      bibliography, not a dependency list — the same reason `references` is
+      declared not comparable above.
+
+fields:
+  - property: name
+    source: title
+    strategy: text
+    rule: equal
+    severity: error
+    note: >
+      The software title is one of the three fields that
+      must agree between the two files.
+
+  - property: version
+    source: version
+    strategy: version
+    rule: equal
+    severity: error
+    note: >
+      A version skew between the two files means one of them describes a
+      different release than the other, which breaks citation.
+
+  - property: author
+    source: authors
+    strategy: people
+    rule: equal
+    severity: error
+    note: >
+      Compared semantically: ORCIDs first, then family name with initials
+      accepted as abbreviations of given names. Order is not significant to
+      the comparison, though CFF and CodeMeta both treat author order as
+      meaningful for citation.
+
+  - property: license
+    source: license
+    strategy: spdx
+    rule: equal
+    severity: error
+
+  - property: codeRepository
+    source: repository-code
+    strategy: uri
+    rule: equal
+    severity: error
+
+  - property: identifier
+    source: doi, identifiers
+    strategy: identifier
+    rule: subset
+    severity: error
+    note: >
+      Every identifier claimed in CITATION.cff must also appear in
+      codemeta.json, which is the canonical record. The reverse is not
+      required: codemeta.json may list identifiers CFF has no field for.
+
+  - property: datePublished
+    source: date-released
+    strategy: date
+    rule: equal
+    severity: error
+
+  - property: description
+    source: abstract
+    strategy: text
+    rule: equal
+    severity: warning
+    note: >
+      Reported as a warning rather than an error. Prose is routinely
+      reworded in one file and not the other, and that is a documentation
+      lapse rather than contradictory metadata.
+
+  - property: url
+    source: url
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: downloadUrl
+    source: repository-artifact
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: keywords
+    source: keywords
+    strategy: text
+    rule: overlap
+    severity: warning
+    note: >
+      Keyword lists legitimately differ in detail, so only a completely
+      disjoint pair is reported. That pattern nearly always means one file was
+      filled in for a different project.
+
+  - property: maintainer
+    source: contact
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: referencePublication
+    source: preferred-citation
+    strategy: doi
+    rule: subset
+    severity: warning
+
+  - property: softwareRequirements
+    source: references
+    comparable: false
+    reason: >
+      CFF `references` is a bibliography of arbitrary works, not a dependency
+      list. The upstream crosswalk relates it to softwareRequirements, but the
+      mapping loses so much that any comparison would be meaningless.
+
+  - property: citation
+    source: preferred-citation.doi
+    strategy: doi
+    rule: subset
+    severity: info
+    note: >
+      The work CFF says to cite instead of the software itself. Recorded
+      alongside referencePublication, which is the same DOI under the concept
+      the profile speaks to.
+
+  - property: sameAs
+    source: identifiers[type=url]
+    strategy: best-effort
+    rule: subset
+    severity: info
+    note: >
+      Another address for this same work. Informational: CFF permits several
+      and CodeMeta expects one canonical URL, so a difference is not a fault.

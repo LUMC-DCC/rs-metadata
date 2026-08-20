@@ -1,0 +1,131 @@
+# Crosswalk: R package DESCRIPTION <-> CodeMeta
+id: r-description
+format: R package DESCRIPTION
+formatVersion: "R"
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/R%20Package%20Description.csv
+  retrieved: "2026-08-14"
+  notes: >
+    Field correspondences follow the CodeMeta project's R Package Description
+    crosswalk. Parsing of the `Authors@R` field, which holds R code rather
+    than data, and the reconciliation of R's version and license spellings are
+    rs-metadata additions.
+
+upstream:
+  omitted:
+    softwareVersion: >
+      Upstream maps `Version` to both `version` and `softwareVersion`. This
+      profile compares it once, as `version`.
+    identifier: >
+      Upstream maps this to the `Package` field. That name identifies the
+      package within CRAN, while codemeta.json's `identifier` is the DOI that
+      identifies the software outside it, so comparing the two would differ on
+      every correct pair. `Package` is compared as `name` instead.
+
+fields:
+  - property: name
+    source: Package, Title
+    strategy: name
+    rule: overlap
+    severity: warning
+    note: >
+      The upstream crosswalk maps CodeMeta `name` to `Title`, but codemetar,
+      the tool most R authors use, writes `Package` there instead. Both are
+      offered and a match against either is accepted, because the disagreement
+      is between conventions rather than within a repository.
+
+  - property: version
+    source: Version
+    strategy: version
+    rule: equal
+    severity: error
+    note: >
+      R versions use a dash before the final component (`1.2-3`) where other
+      ecosystems use a dot; the version strategy treats the two as equal.
+
+  - property: description
+    source: Description
+    strategy: text
+    rule: equal
+    severity: warning
+
+  - property: license
+    source: License
+    strategy: spdx
+    rule: overlap
+    severity: warning
+    note: >
+      R license strings such as `GPL-3` or `MIT + file LICENSE` do not map
+      cleanly onto SPDX identifiers, so a partial match is accepted and a
+      complete mismatch is only a warning.
+
+  - property: author
+    source: Authors@R [aut], Author
+    strategy: people
+    rule: subset
+    severity: warning
+
+  - property: maintainer
+    source: Authors@R [cre], Maintainer
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: codeRepository
+    source: URL
+    strategy: uri
+    rule: overlap
+    severity: warning
+    note: >
+      R's `URL` field holds a comma-separated list mixing the repository, the
+      homepage and the documentation site, so only a complete absence of any
+      match is reported.
+
+  - property: issueTracker
+    source: BugReports
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: datePublished
+    source: Date
+    strategy: date
+    rule: equal
+    severity: warning
+
+  - property: programmingLanguage
+    source: (implied by DESCRIPTION)
+    strategy: language
+    rule: overlap
+    severity: warning
+
+  - property: softwareRequirements
+    source: Depends, Imports
+    strategy: dependency-set
+    rule: informational
+    severity: info
+
+  - property: contributor
+    source: "[ctb] in Authors@R"
+    strategy: people
+    rule: subset
+    severity: info
+    anchorProperties: [contributor, author]
+
+  - property: softwareSuggestions
+    source: Suggests
+    strategy: dependency-set
+    rule: informational
+    severity: info
+
+  - property: url
+    source: URL
+    strategy: uri
+    rule: subset
+    severity: info
+    note: >
+      CRAN packages routinely list the source repository and the documentation
+      site together in `URL` without distinguishing them, so both concepts are
+      read from it and both compare as subsets.

@@ -1,0 +1,103 @@
+{
+  "@context": [
+    "https://w3id.org/codemeta/3.1",
+    {
+      "schema": "https://schema.org/"
+    }
+  ],
+  "@type": "SoftwareSourceCode",
+  "name": "rs-metadata",
+  "description": "An LUMC profile of CodeMeta 3.1 for research software metadata, with a validator that checks codemeta.json against the profile and keeps it consistent with every other metadata file in the repository, including CITATION.cff, .zenodo.json, packaging manifests and the repository's own GitHub metadata. Ships as a command-line tool and as a reusable GitHub Action.",
+  "version": "1.0.0",
+  "identifier": "https://github.com/LUMC-DCC/rs-metadata/tree/v1.0.0",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Mariia",
+      "familyName": "Steeghs-Turchina",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://ror.org/05xvt9f17",
+        "name": "Leiden University Medical Center"
+      }
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Mariia",
+      "familyName": "Steeghs-Turchina",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://ror.org/05xvt9f17",
+        "name": "Leiden University Medical Center"
+      }
+    }
+  ],
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "codeRepository": "https://github.com/LUMC-DCC/rs-metadata",
+  "url": "https://lumc-dcc.github.io/rs-metadata/",
+  "issueTracker": "https://github.com/LUMC-DCC/rs-metadata/issues",
+  "continuousIntegration": "https://github.com/LUMC-DCC/rs-metadata/actions",
+  "releaseNotes": "https://github.com/LUMC-DCC/rs-metadata/blob/main/CHANGELOG.md",
+  "softwareHelp": [
+    {
+      "@type": "CreativeWork",
+      "name": "Documentation",
+      "url": "https://lumc-dcc.github.io/rs-metadata/"
+    }
+  ],
+  "developmentStatus": "active",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Python",
+      "version": ">=3.10"
+    }
+  ],
+  "runtimePlatform": [
+    "Python",
+    "GitHub Actions"
+  ],
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows"
+  ],
+  "applicationCategory": "Command-line tool",
+  "schema:featureList": [
+    "http://edamontology.org/operation_2428",
+    "Validation of CodeMeta records against an institutional profile",
+    "Consistency checking between software metadata files"
+  ],
+  "applicationSubCategory": [
+    "http://edamontology.org/topic_3316"
+  ],
+  "keywords": [
+    "codemeta",
+    "citation file format",
+    "research software",
+    "metadata",
+    "FAIR",
+    "validation"
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "jsonschema",
+      "version": ">=4.21,<5"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "pyyaml",
+      "version": ">=6.0,<7"
+    }
+  ],
+  "copyrightHolder": [
+    {
+      "@type": "Organization",
+      "@id": "https://ror.org/05xvt9f17",
+      "name": "Leiden University Medical Center"
+    }
+  ]
+}

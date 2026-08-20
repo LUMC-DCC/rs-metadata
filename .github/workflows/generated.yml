@@ -1,0 +1,31 @@
+name: Generated files
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Regenerate and compare
+    runs-on: ubuntu-latest
+    # Everything here is derived from data that lives in the repository. A
+    # stale artifact means the source changed without the derived file being
+    # rebuilt, so the build fails rather than shipping the mismatch.
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+
+      - name: Profile schema
+        run: poetry run python scripts/build_schema.py --check
+
+      - name: Documentation pages
+        run: poetry run python scripts/generate_docs.py --check

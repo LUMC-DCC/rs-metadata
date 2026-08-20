@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: rs-metadata
+message: "If you use this software, please cite it using the metadata in this file."
+type: software
+abstract: >-
+  An LUMC profile of CodeMeta 3.1 for research software metadata, with a
+  validator that checks codemeta.json against the profile and keeps it
+  consistent with every other metadata file in the repository, including
+  CITATION.cff, .zenodo.json, packaging manifests and the repository's own
+  GitHub metadata. Ships as a command-line tool and as a reusable GitHub
+  Action.
+authors:
+  - family-names: Steeghs-Turchina
+    given-names: Mariia
+    affiliation: Leiden University Medical Center
+version: "1.0.0"
+repository-code: https://github.com/LUMC-DCC/rs-metadata
+url: https://lumc-dcc.github.io/rs-metadata/
+license: Apache-2.0
+keywords:
+  - codemeta
+  - citation file format
+  - research software
+  - metadata
+  - FAIR
+  - validation

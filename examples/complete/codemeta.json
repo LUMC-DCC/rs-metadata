@@ -1,0 +1,118 @@
+{
+  "@context": [
+    "https://w3id.org/codemeta/3.1",
+    { "schema": "https://schema.org/" }
+  ],
+  "@type": "SoftwareSourceCode",
+  "@id": "https://doi.org/10.5281/zenodo.0000000",
+
+  "name": "ReadAligner",
+  "description": "A command-line tool for aligning short sequencing reads to a reference genome. It is tuned for low-coverage clinical samples, where standard aligners lose sensitivity, and emits both BAM and CRAM output with per-region quality summaries.",
+  "version": "2.1.0",
+  "identifier": [
+    "https://doi.org/10.5281/zenodo.0000000",
+    "https://bio.tools/readaligner"
+  ],
+
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-1825-0097",
+      "givenName": "Josiah",
+      "familyName": "Carberry",
+      "email": "j.carberry@example-lumc.nl",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://ror.org/05xvt9f17",
+        "name": "Leiden University Medical Center"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://ror.org/05xvt9f17",
+      "name": "Leiden University Medical Center"
+    }
+  ],
+
+  "maintainer": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-1825-0097",
+      "givenName": "Josiah",
+      "familyName": "Carberry",
+      "email": "j.carberry@example-lumc.nl"
+    }
+  ],
+
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "codeRepository": "https://github.com/lumc-example/readaligner",
+  "url": "https://lumc-example.github.io/readaligner",
+  "issueTracker": "https://github.com/lumc-example/readaligner/issues",
+  "continuousIntegration": "https://github.com/lumc-example/readaligner/actions",
+  "releaseNotes": "https://github.com/lumc-example/readaligner/blob/main/CHANGELOG.md",
+  "datePublished": "2026-06-01",
+  "developmentStatus": "active",
+
+  "programmingLanguage": [
+    { "@type": "ComputerLanguage", "name": "Python", "version": "3.12" },
+    "C++"
+  ],
+  "runtimePlatform": ["Docker", "Conda"],
+  "operatingSystem": ["Linux", "macOS"],
+
+  "applicationCategory": "Command-line tool",
+  "schema:featureList": [
+    "http://edamontology.org/operation_0292",
+    "http://edamontology.org/operation_3198",
+    "Per-region alignment quality summarization"
+  ],
+  "applicationSubCategory": [
+    "http://edamontology.org/topic_0622",
+    "http://edamontology.org/topic_3168"
+  ],
+  "keywords": [
+    "genomics",
+    "read alignment",
+    "low coverage",
+    "Homo sapiens"
+  ],
+
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "pysam",
+      "version": ">=0.22",
+      "provider": {
+        "@type": "Organization",
+        "name": "PyPI",
+        "url": "https://pypi.org"
+      }
+    },
+    { "@type": "SoftwareSourceCode", "name": "numpy", "version": ">=1.24" }
+  ],
+
+  "supportingData": [
+    {
+      "@type": "DataFeed",
+      "name": "GRCh38 reference genome",
+      "version": "GRCh38.p14",
+      "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.40/"
+    }
+  ],
+
+  "softwareHelp": [
+    {
+      "@type": "CreativeWork",
+      "url": "https://lumc-example.github.io/readaligner/docs"
+    }
+  ],
+
+  "referencePublication": [
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://doi.org/10.1093/bioinformatics/btp352"
+    }
+  ],
+
+  "funding": ["NWO-016.Vidi.000.000", "ZonMw-09120012110000"]
+}

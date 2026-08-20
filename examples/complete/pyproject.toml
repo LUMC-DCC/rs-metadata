@@ -1,0 +1,30 @@
+# Part of the `complete` example: packaging metadata that agrees with
+# codemeta.json. rs-metadata detects this file automatically — nothing in the
+# workflow has to mention it.
+[project]
+name = "readaligner"
+version = "2.1.0"
+description = "Align short sequencing reads to a reference genome."
+requires-python = ">=3.10"
+license = "Apache-2.0"
+keywords = ["genomics", "read alignment", "low coverage"]
+authors = [{ name = "Josiah Carberry", email = "j.carberry@example-lumc.nl" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = ["pysam>=0.22", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://lumc-example.github.io/readaligner"
+Repository = "https://github.com/lumc-example/readaligner"
+Issues = "https://github.com/lumc-example/readaligner/issues"
+Documentation = "https://lumc-example.github.io/readaligner/docs"
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"

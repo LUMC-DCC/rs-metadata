@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumc-dcc.github.io/rs-metadata/schema/1.0.0/rs-metadata-report.schema.json",
+  "title": "rs-metadata validation report",
+  "description": "The output contract of `rs-metadata validate --format json`. This is a stable interface: institutional tooling may consume it instead of scraping CI logs. Every renderer (human-readable text, GitHub annotations) is generated from this model, so the report is always a complete account of what the validator did.",
+  "$comment": "Versioned with the tool that produces it: pin on the major component of tool.version. Additive changes bump the minor version; consumers should ignore unknown fields rather than fail.",
+  "type": "object",
+  "required": [
+    "status",
+    "tool",
+    "profile",
+    "sources",
+    "summary",
+    "diagnostics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "description": "Overall outcome. `passed-with-warnings` means no errors were found but recommendations went unmet; whether that fails a build is a policy decision made by `--fail-on`, not by the report.",
+      "enum": [
+        "passed",
+        "passed-with-warnings",
+        "failed"
+      ]
+    },
+    "generatedAt": {
+      "description": "UTC timestamp of the run, in ISO 8601. Omitted when SOURCE_DATE_EPOCH requests reproducible output.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "tool": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "rs-metadata"
+        },
+        "version": {
+          "description": "The rs-metadata release that produced this report. The report format is versioned with the tool: pin on this major version.",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "profile": {
+      "description": "Which profile the anchor record was validated against, and which upstream vocabulary version that profile builds on.",
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "codemetaVersion"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "codemetaVersion": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "root": {
+      "description": "The repository directory that was scanned, relative to the invocation or absolute.",
+      "type": "string"
+    },
+    "sources": {
+      "description": "Every metadata source considered, including ones that were looked for and not found. Recording absent sources makes the report self-explanatory: a reader can tell the difference between 'no problems with pyproject.toml' and 'there is no pyproject.toml'.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Source"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "error",
+        "warning",
+        "info"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checks": {
+          "description": "Number of comparison and profile checks evaluated, including those that passed silently.",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "diagnostics": {
+      "description": "All findings, ordered by severity and then by source and property. Errors and warnings are not split into separate arrays: consumers filter on `severity`, which keeps a single ordering and a single shape.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Diagnostic"
+      }
+    }
+  },
+  "$defs": {
+    "Source": {
+      "type": "object",
+      "required": [
+        "id",
+        "format",
+        "role",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Stable adapter identifier, usable as a filter key.",
+          "type": "string",
+          "examples": [
+            "codemeta",
+            "cff",
+            "pyproject",
+            "package-json",
+            "r-description"
+          ]
+        },
+        "file": {
+          "description": "Repository-relative path. For a source with status `absent`, the conventional path that was looked for.",
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "examples": [
+            "CodeMeta",
+            "Citation File Format"
+          ]
+        },
+        "formatVersion": {
+          "description": "Version of the source format as declared by the file itself, where the format declares one.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "description": "`anchor` is codemeta.json, the record everything else is compared against. `required` sources must be present. `optional` sources are auto-detected and skipped when absent.",
+          "enum": [
+            "anchor",
+            "required",
+            "optional"
+          ]
+        },
+        "status": {
+          "description": "`parsed` means the file was read and mapped. `absent` means it was looked for and not found. `unparsable` means it exists but could not be read, in which case a diagnostic explains why.",
+          "enum": [
+            "parsed",
+            "absent",
+            "unparsable"
+          ]
+        },
+        "mapping": {
+          "$ref": "#/$defs/MappingRef"
+        }
+      }
+    },
+    "MappingRef": {
+      "description": "Which crosswalk was used to relate this source to CodeMeta, and where that crosswalk comes from. Recorded so a reader can tell an upstream CodeMeta mapping apart from one rs-metadata introduced.",
+      "type": "object",
+      "required": [
+        "id",
+        "origin"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "examples": [
+            "cff-1.2.0"
+          ]
+        },
+        "version": {
+          "type": "string"
+        },
+        "origin": {
+          "description": "`codemeta-upstream` for mappings taken from the CodeMeta crosswalk tables; `rs-metadata` for mappings this project defines where no adequate upstream mapping exists; `mixed` when a mapping extends an upstream table.",
+          "enum": [
+            "codemeta-upstream",
+            "rs-metadata",
+            "mixed"
+          ]
+        },
+        "source": {
+          "description": "URL of the upstream crosswalk, where one exists.",
+          "type": "string"
+        },
+        "retrieved": {
+          "type": "string"
+        }
+      }
+    },
+    "Location": {
+      "description": "Where in a file a finding applies. Line and column are 1-based and are resolved from the original file text, so annotations land on the offending line rather than on line 1.",
+      "type": "object",
+      "required": [
+        "file"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "path": {
+          "description": "Dotted or bracketed path to the value inside the source document, in the notation native to that format.",
+          "type": "string",
+          "examples": [
+            "version",
+            "author[1].familyName",
+            "project.version"
+          ]
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "value": {
+          "description": "The observed value, rendered for display. Long values may be truncated."
+        }
+      }
+    },
+    "Diagnostic": {
+      "type": "object",
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "Stable, descriptive diagnostic identifier. Codes are namespaced by the layer that produced them and never change meaning within a major version, so they are safe to use in filters, suppressions, and documentation links.",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$",
+          "examples": [
+            "profile.required-field",
+            "profile.invalid-value",
+            "source.invalid",
+            "consistency.mismatch",
+            "consistency.uncomparable",
+            "recommendation.missing"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ]
+        },
+        "message": {
+          "description": "A complete sentence naming the affected metadata and stating what is wrong with it. Never generic.",
+          "type": "string"
+        },
+        "property": {
+          "description": "The CodeMeta property the finding concerns, where one applies.",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "anchor": {
+          "description": "For consistency findings: the value in codemeta.json.",
+          "$ref": "#/$defs/Location"
+        },
+        "source": {
+          "description": "For consistency findings: the value in the other metadata file.",
+          "$ref": "#/$defs/Location"
+        },
+        "strategy": {
+          "description": "The comparison strategy that produced a consistency finding, which explains what counted as equivalent.",
+          "type": "string",
+          "examples": [
+            "text",
+            "version",
+            "uri",
+            "spdx",
+            "doi",
+            "people",
+            "dependency-set"
+          ]
+        },
+        "rule": {
+          "description": "The comparison rule applied: values must be equal, the source must be a subset of the anchor, or the two must merely overlap.",
+          "enum": [
+            "equal",
+            "subset",
+            "overlap",
+            "informational"
+          ]
+        },
+        "mapping": {
+          "$ref": "#/$defs/MappingRef"
+        },
+        "suggestion": {
+          "description": "Concrete remediation. Present whenever the validator knows what a correct value would look like.",
+          "type": "string"
+        },
+        "docs": {
+          "description": "Link to the documentation for this diagnostic code.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

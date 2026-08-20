@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://lumc-dcc.github.io/rs-metadata/
+    about: Diagnostics reference, the profile, and how to run it in CI.
+  - name: What a diagnostic means
+    url: https://lumc-dcc.github.io/rs-metadata/using/diagnostics.html
+    about: Every code, what triggers it, and how to fix it. `rs-metadata explain CODE` says the same offline.

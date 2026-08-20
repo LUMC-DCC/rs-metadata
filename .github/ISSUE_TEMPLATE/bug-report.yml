@@ -1,0 +1,57 @@
+name: Bug report
+description: rs-metadata crashed, or behaved differently from what it documents
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For metadata wrongly reported as invalid, please use **False alarm**
+        instead.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: >
+        Include the full output. If it was a traceback, all of it: an
+        `internal.error` finding or a stack trace names the module at fault.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: >
+        The command you ran and the files it ran against. A repository we can
+        clone is ideal; the relevant metadata files inline are fine too.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `rs-metadata --version`.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where it ran
+      options:
+        - Local command line
+        - GitHub Actions
+        - Both
+    validations:
+      required: true

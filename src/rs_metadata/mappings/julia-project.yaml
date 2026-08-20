@@ -1,0 +1,94 @@
+# Crosswalk: Julia Project.toml <-> CodeMeta
+#
+# Julia's project file is deliberately minimal — it has no license,
+# description or repository, because Julia keeps those in a LICENSE file and
+# in the registry. This crosswalk is small because the format is.
+id: julia-project
+format: Julia project metadata
+formatVersion: null
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/Julia%20Project.csv
+  retrieved: "2026-08-20"
+  notes: >
+    CodeMeta publishes a Julia Project.toml crosswalk, and the correspondences
+    below follow it. Two deviations are deliberate and noted per field: the
+    upstream table maps `version` to CodeMeta's `softwareVersion`, while this
+    profile uses `version` throughout, and its `identifier` correspondence is
+    recorded but not compared. The comparison policy — strategy, rule and
+    severity — has no upstream equivalent and is rs-metadata's own.
+
+upstream:
+  omitted:
+    softwareVersion: >
+      Upstream maps Project.toml's `version` to `softwareVersion`. This profile
+      uses CodeMeta's `version` for the release identifier throughout, so the
+      same field is mapped there instead. Comparing it twice would report one
+      difference as two.
+
+fields:
+  - property: name
+    source: name
+    strategy: name
+    rule: equal
+    severity: warning
+    note: >
+      Compared with separators removed, since a package registered as
+      `ReadAligner` may be written `read-aligner` elsewhere.
+
+  - property: version
+    source: version
+    strategy: version
+    rule: equal
+    severity: error
+
+  - property: author
+    source: authors
+    strategy: people
+    rule: subset
+    severity: warning
+    anchorProperties: [author, maintainer]
+    note: >
+      Julia accepts both `"Name <email>"` strings and tables following the
+      Citation File Format's person schema, so this normalizes the same way
+      CITATION.cff does.
+
+  - property: programmingLanguage
+    source: uuid
+    strategy: language
+    rule: overlap
+    severity: warning
+    note: >
+      A Project.toml with a `uuid` is prima facie evidence that the package is
+      written in Julia; this catches a codemeta.json that forgot to say so.
+      Not an upstream correspondence — the crosswalk leaves it blank.
+
+  - property: runtimePlatform
+    source: compat.julia
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      The `[compat]` entry for `julia` is the language runtime rather than a
+      dependency, which is what upstream's `runtimePlatform` correspondence
+      records.
+
+  - property: softwareRequirements
+    source: compat
+    strategy: dependency-set
+    rule: informational
+    severity: info
+    note: >
+      Read from `[compat]` rather than `[deps]`, because `[deps]` carries only
+      UUIDs while `[compat]` carries the version bounds worth comparing.
+
+  - property: identifier
+    source: uuid
+    comparable: false
+    reason: >
+      Upstream maps Julia's `uuid` to CodeMeta's `identifier`, and it is a
+      genuine package identifier. But codemeta.json's `identifier` is the DOI
+      that identifies the software to registries and archives, so comparing a
+      UUID against a DOI would report a difference on every correct pair of
+      files.

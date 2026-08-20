@@ -1,0 +1,57 @@
+name: Metadata format support
+description: Ask for a metadata file rs-metadata does not read yet
+labels: ["adapter"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        rs-metadata compares every metadata file in a repository against
+        `codemeta.json`. Adding one means writing an adapter and a crosswalk;
+        see [Adding support for a metadata format](https://lumc-dcc.github.io/rs-metadata/developing/adapters.html).
+
+        For anything that is not a new file format, use **Feature request**.
+
+  - type: input
+    id: format
+    attributes:
+      label: Which format
+      placeholder: Cabal, publiccode.yml, Podfile, ...
+    validations:
+      required: true
+
+  - type: input
+    id: filename
+    attributes:
+      label: Filename it is stored under
+      placeholder: package.yaml
+    validations:
+      required: true
+
+  - type: input
+    id: spec
+    attributes:
+      label: Link to its specification
+      description: >
+        The authoritative definition of the fields, ideally machine-readable.
+        Nothing in this project is transcribed by hand.
+    validations:
+      required: true
+
+  - type: input
+    id: crosswalk
+    attributes:
+      label: Does CodeMeta publish a crosswalk for it?
+      description: >
+        Check https://github.com/codemeta/codemeta/tree/master/crosswalks — there
+        are more than forty. If one exists, link it; it decides the mapping.
+      placeholder: https://github.com/codemeta/codemeta/blob/master/crosswalks/Cabal.csv
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is worth comparing
+      description: >
+        Which fields it duplicates from `codemeta.json`, and what goes wrong
+        when the two disagree.
+    validations:
+      required: true

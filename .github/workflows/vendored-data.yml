@@ -1,0 +1,23 @@
+name: Vendored data
+
+on:
+  schedule:
+    # Weekly. Upstream vocabularies change on their own schedule.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  upstream:
+    name: Compare vendored vocabularies with upstream
+    runs-on: ubuntu-latest
+    # Never blocks a pull request. Refreshing the vendored data changes what CI
+    # accepts in every repository using the action, so it is a deliberate,
+    # reviewed act rather than something a scheduled job does on its own.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+      - run: poetry run python scripts/vendor_reference_data.py --check

@@ -1,0 +1,26 @@
+name: Self-validation
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  own-metadata:
+    name: Validate this repository's own metadata
+    runs-on: ubuntu-latest
+    # rs-metadata is research software, so it carries the metadata it asks of
+    # everyone else and checks it with itself.
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./
+        with:
+          artifact-name: rs-metadata-self-report
