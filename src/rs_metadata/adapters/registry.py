@@ -11,6 +11,7 @@ To add a format, write an adapter and a mapping file and add it to
 from __future__ import annotations
 
 from .base import Adapter
+from .biotools import BiotoolsAdapter
 from .cargo import CargoAdapter
 from .cff import CffAdapter
 from .codemeta import CodeMetaAdapter
@@ -32,6 +33,7 @@ ADAPTERS: tuple[Adapter, ...] = (
     CffAdapter(),
     GitHubAdapter(),
     ZenodoAdapter(),
+    BiotoolsAdapter(),
     PyprojectAdapter(),
     PackageJsonAdapter(),
     RDescriptionAdapter(),
@@ -56,6 +58,7 @@ def companion_adapters() -> tuple[Adapter, ...]:
     cff
     github
     zenodo
+    biotools
     pyproject
     package-json
     r-description

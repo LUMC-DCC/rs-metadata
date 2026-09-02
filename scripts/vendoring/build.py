@@ -86,6 +86,11 @@ ARTIFACTS: tuple[Artifact, ...] = (
         lambda d: d["citation-file-format"].json,
     ),
     Artifact(
+        "biotools.schema.json",
+        ("biotools-tool-type",),
+        lambda d: d["biotools-tool-type"].json,
+    ),
+    Artifact(
         "spdx-licenses.json",
         ("spdx-license-list",),
         lambda d: licenses.build_spdx_index(d["spdx-license-list"].json),

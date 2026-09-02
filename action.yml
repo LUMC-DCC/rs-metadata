@@ -24,8 +24,8 @@ inputs:
     description: >-
       Paths to metadata files kept outside the repository root, one ID=PATH
       per line, for a monorepo whose packaging metadata lives in a
-      subdirectory. Ids: codemeta, cff, pyproject, package-json, r-description.
-      For example:
+      subdirectory. Ids: codemeta, cff, github, zenodo, biotools, pyproject,
+      package-json, r-description, cargo, julia-project, dockerfile. For example:
         sources: |
           pyproject=backend/pyproject.toml
           package-json=frontend/package.json

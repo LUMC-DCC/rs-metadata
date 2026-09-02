@@ -84,8 +84,8 @@ name the files rather than moving them:
 ```
 
 Ids are the ones the report lists under **Metadata sources** — `codemeta`,
-`cff`, `github`, `zenodo`, `pyproject`, `package-json`, `r-description`,
-`cargo`, `julia-project` and `dockerfile`. A
+`cff`, `github`, `zenodo`, `biotools`, `pyproject`, `package-json`,
+`r-description`, `cargo`, `julia-project` and `dockerfile`. A
 path given here is asserted to exist: if the file is not there, that is an
 error rather than a silent skip, so a typo cannot quietly validate nothing.
 
@@ -218,7 +218,7 @@ repos:
         language: python
         additional_dependencies: ["rs-metadata"]
         pass_filenames: false
-        files: '^(codemeta\.json|CITATION\.cff|\.zenodo\.json|pyproject\.toml|package\.json|DESCRIPTION|Cargo\.toml|Project\.toml|Dockerfile)$'
+        files: '^(codemeta\.json|CITATION\.cff|\.zenodo\.json|biotools\.json|pyproject\.toml|package\.json|DESCRIPTION|Cargo\.toml|Project\.toml|Dockerfile)$'
 ```
 
 `pass_filenames: false` matters: the validator takes a repository, not a list

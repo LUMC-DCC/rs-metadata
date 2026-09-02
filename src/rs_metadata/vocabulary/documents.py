@@ -52,6 +52,12 @@ def cff_schema() -> dict[str, Any]:
 
 
 @cache
+def biotools_schema() -> dict[str, Any]:
+    """The official bio.tools JSON Schema."""
+    return load(DATA_PACKAGE, "biotools.schema.json")
+
+
+@cache
 def codemeta_crosswalks() -> dict[str, Any]:
     """CodeMeta's own crosswalk tables, keyed by the mapping id that uses them.
 

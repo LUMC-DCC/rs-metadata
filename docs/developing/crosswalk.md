@@ -32,6 +32,46 @@ and the [FAQ](../using/faq.md) are the faster route.
 Provenance travels with every consistency finding in the JSON report,
 so a reader can always tell which kind of mapping produced it.
 
+## bio.tools metadata
+
+- **Mapping id:** `biotools`
+- **Format version:** 3.3.0
+- **Provenance:** upstream crosswalk, extended by rs-metadata
+- **Upstream table:** <https://github.com/codemeta/codemeta/blob/master/crosswalks/bio.tools.csv>
+- **Retrieved:** 2026-09-02
+
+Record-level correspondences follow CodeMeta's bio.tools crosswalk. That table still names the pre-3.3 `labels.language` and `labels.license` paths; biotoolsSchema 3.3 flattened both to `language` and `license`, so the current paths are used here. Repository links, issue trackers, EDAM operations, tool types, downloads, documentation and credit roles are unambiguous extensions defined by rs-metadata. Comparison policy is also rs-metadata's.
+
+| CodeMeta concept | Source field | Comparison | Rule | Severity |
+|---|---|---|---|---|
+| `applicationCategory` | `toolType` | `text` | must overlap | `warning` |
+| `citation` | `publication[].doi` | `doi` | source ⊆ anchor | `info` |
+| `codeRepository` | `link[type=Repository].url` | `uri` | must overlap | `warning` |
+| `contributor` | `credit[typeRole=Contributor|Developer|Documentor]` | `people` | source ⊆ anchor | `info` |
+| `description` | `description` | `text` | reported only | `info` |
+| `developmentStatus` | `maturity` | `best-effort` | reported only | `info` |
+| `downloadUrl` | `download[].url` | `uri` | reported only | `info` |
+| `issueTracker` | `link[type=Issue tracker].url` | `uri` | source ⊆ anchor | `warning` |
+| `keywords` | `topic[].term` | `text` | must overlap | `warning` |
+| `license` | `license` | `spdx` | must be equal | `error` |
+| `maintainer` | `credit[typeRole=Maintainer|Primary contact]` | `people` | source ⊆ anchor | `info` |
+| `name` | `name` | `name` | must be equal | `error` |
+| `operatingSystem` | `operatingSystem` | `text` | must overlap | `warning` |
+| `programmingLanguage` | `language` | `language` | must overlap | `warning` |
+| `provider` | `credit[typeRole=Provider]` | `people` | source ⊆ anchor | `info` |
+| `schema:featureList` | `function[].operation[].uri|term` | `text` | must overlap | `warning` |
+| `softwareHelp` | `documentation[].url` | `uri` | source ⊆ anchor | `info` |
+| `url` | `homepage` | `uri` | must be equal | `warning` |
+| `version` | `version` | `version` | must overlap | `warning` |
+
+**Notes**
+
+- `description` — bio.tools limits descriptions to 1,000 characters, so the registry text may be a shortened version of the CodeMeta abstract.
+- `developmentStatus` — bio.tools uses Emerging, Mature and Legacy, while CodeMeta records a repostatus.org term. The vocabularies do not map one to one.
+- `keywords` — The upstream crosswalk relates CodeMeta keywords to EDAM topic labels. Only a completely disjoint set is treated as drift.
+- `schema:featureList` — bio.tools operations and the LUMC feature list both use EDAM Operation identifiers. A label is used when an operation has no URI.
+- `version` — A bio.tools record may list several versions. The current CodeMeta release must appear in that list, but older versions are allowed.
+
 ## Rust package manifest
 
 - **Mapping id:** `cargo`

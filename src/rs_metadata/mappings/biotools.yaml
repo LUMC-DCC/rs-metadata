@@ -1,0 +1,155 @@
+# Crosswalk: biotools.json <-> CodeMeta
+id: biotools
+format: bio.tools metadata
+formatVersion: 3.3.0
+
+provenance:
+  origin: mixed
+  source: https://github.com/codemeta/codemeta/blob/master/crosswalks/bio.tools.csv
+  retrieved: "2026-09-02"
+  notes: >
+    Record-level correspondences follow CodeMeta's bio.tools crosswalk. That
+    table still names the pre-3.3 `labels.language` and `labels.license`
+    paths; biotoolsSchema 3.3 flattened both to `language` and `license`, so
+    the current paths are used here. Repository links, issue trackers, EDAM
+    operations, tool types, downloads, documentation and credit roles are
+    unambiguous extensions defined by rs-metadata. Comparison policy is also
+    rs-metadata's.
+
+upstream:
+  omitted:
+    softwareVersion: >
+      CodeMeta's crosswalk maps both `softwareVersion` and `version` to the
+      same bio.tools `version` field. The LUMC profile uses CodeMeta's
+      `version`, so recording both would compare one source value twice.
+
+fields:
+  - property: name
+    source: name
+    strategy: name
+    rule: equal
+    severity: error
+
+  - property: description
+    source: description
+    strategy: text
+    rule: informational
+    severity: info
+    note: >
+      bio.tools limits descriptions to 1,000 characters, so the registry text
+      may be a shortened version of the CodeMeta abstract.
+
+  - property: url
+    source: homepage
+    strategy: uri
+    rule: equal
+    severity: warning
+
+  - property: version
+    source: version
+    strategy: version
+    rule: overlap
+    severity: warning
+    note: >
+      A bio.tools record may list several versions. The current CodeMeta
+      release must appear in that list, but older versions are allowed.
+
+  - property: programmingLanguage
+    source: language
+    strategy: language
+    rule: overlap
+    severity: warning
+
+  - property: operatingSystem
+    source: operatingSystem
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: license
+    source: license
+    strategy: spdx
+    rule: equal
+    severity: error
+
+  - property: keywords
+    source: topic[].term
+    strategy: text
+    rule: overlap
+    severity: warning
+    note: >
+      The upstream crosswalk relates CodeMeta keywords to EDAM topic labels.
+      Only a completely disjoint set is treated as drift.
+
+  - property: citation
+    source: publication[].doi
+    strategy: doi
+    rule: subset
+    severity: info
+
+  - property: developmentStatus
+    source: maturity
+    strategy: best-effort
+    rule: informational
+    severity: info
+    note: >
+      bio.tools uses Emerging, Mature and Legacy, while CodeMeta records a
+      repostatus.org term. The vocabularies do not map one to one.
+
+  - property: applicationCategory
+    source: toolType
+    strategy: text
+    rule: overlap
+    severity: warning
+
+  - property: schema:featureList
+    source: function[].operation[].uri|term
+    strategy: text
+    rule: overlap
+    severity: warning
+    note: >
+      bio.tools operations and the LUMC feature list both use EDAM Operation
+      identifiers. A label is used when an operation has no URI.
+
+  - property: codeRepository
+    source: link[type=Repository].url
+    strategy: uri
+    rule: overlap
+    severity: warning
+
+  - property: issueTracker
+    source: link[type=Issue tracker].url
+    strategy: uri
+    rule: subset
+    severity: warning
+
+  - property: downloadUrl
+    source: download[].url
+    strategy: uri
+    rule: informational
+    severity: info
+
+  - property: softwareHelp
+    source: documentation[].url
+    strategy: uri
+    rule: subset
+    severity: info
+
+  - property: maintainer
+    source: credit[typeRole=Maintainer|Primary contact]
+    strategy: people
+    rule: subset
+    severity: info
+
+  - property: contributor
+    source: credit[typeRole=Contributor|Developer|Documentor]
+    strategy: people
+    rule: subset
+    severity: info
+    anchorProperties: [contributor, author]
+
+  - property: provider
+    source: credit[typeRole=Provider]
+    strategy: people
+    rule: subset
+    severity: info

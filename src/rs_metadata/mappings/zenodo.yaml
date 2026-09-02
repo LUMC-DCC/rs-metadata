@@ -21,6 +21,14 @@ provenance:
 
 upstream:
   omitted:
+    softwareVersion: >
+      Upstream maps both `softwareVersion` and `version` to Zenodo's version
+      field. This profile uses CodeMeta's `version`, so reading the same value
+      twice would add a duplicate comparison.
+    readme: >
+      Upstream maps this to `related_identifiers.isDocumentedBy`. That
+      relation can point to any documentation, not specifically a README, so
+      treating it as one would assign a meaning the Zenodo record does not.
     funder: >
       Upstream maps this to `contributors.Funder`, but `Funder` is not one
       of the contributor types Zenodo's own schema permits, so no valid

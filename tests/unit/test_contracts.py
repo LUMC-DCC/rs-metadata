@@ -283,6 +283,80 @@ RICH_FIXTURES = {
         "  type: article\n  title: Paper\n  doi: 10.1000/x\n"
         "  authors:\n    - family-names: Carberry\n      given-names: Josiah\n"
     ),
+    "biotools": json.dumps(
+        [
+            {
+                "name": "TestTool",
+                "description": "A complete bio.tools fixture for contract tests.",
+                "homepage": "https://example-lumc.nl",
+                "version": ["1.0.0"],
+                "operatingSystem": ["Linux"],
+                "language": ["Python"],
+                "license": "Apache-2.0",
+                "toolType": ["Command-line tool"],
+                "topic": [
+                    {
+                        "term": "Genomics",
+                        "uri": "http://edamontology.org/topic_0622",
+                    }
+                ],
+                "maturity": "Mature",
+                "function": [
+                    {
+                        "operation": [
+                            {
+                                "term": "Sequence alignment",
+                                "uri": "http://edamontology.org/operation_0292",
+                            }
+                        ]
+                    }
+                ],
+                "link": [
+                    {
+                        "url": "https://github.com/lumc-test/testtool",
+                        "type": ["Repository"],
+                    },
+                    {
+                        "url": "https://github.com/lumc-test/testtool/issues",
+                        "type": ["Issue tracker"],
+                    },
+                ],
+                "download": [
+                    {
+                        "url": "https://example-lumc.nl/testtool.tar.gz",
+                        "type": "Source code",
+                    }
+                ],
+                "documentation": [
+                    {
+                        "url": "https://example-lumc.nl/docs",
+                        "type": ["User manual"],
+                    }
+                ],
+                "publication": [{"doi": "10.1000/testtool"}],
+                "credit": [
+                    {
+                        "name": "Josiah Carberry",
+                        "email": "j@example-lumc.nl",
+                        "orcidid": "https://orcid.org/0000-0002-1825-0097",
+                        "typeEntity": "Person",
+                        "typeRole": ["Maintainer"],
+                    },
+                    {
+                        "name": "Someone Else",
+                        "typeEntity": "Person",
+                        "typeRole": ["Contributor"],
+                    },
+                    {
+                        "name": "Example Institute",
+                        "typeEntity": "Institute",
+                        "typeRole": ["Provider"],
+                    },
+                ],
+            }
+        ],
+        indent=2,
+    ),
     "pyproject": """\
 [project]
 name = "test-tool"
