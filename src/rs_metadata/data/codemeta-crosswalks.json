@@ -1,6 +1,48 @@
 {
   "$comment": "CodeMeta's own crosswalk tables, one per mapping that has an upstream. They state which source field corresponds to which CodeMeta property; the comparison policy for each is decided in src/rs_metadata/mappings and is not upstream.",
   "crosswalks": {
+    "biotools": {
+      "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/bio.tools.csv",
+      "format": "CodeMeta crosswalk: bio.tools",
+      "properties": {
+        "programmingLanguage": [
+          "labels.language"
+        ],
+        "operatingSystem": [
+          "operatingSystem"
+        ],
+        "softwareVersion": [
+          "version"
+        ],
+        "citation": [
+          "publication"
+        ],
+        "keywords": [
+          "topic.term"
+        ],
+        "license": [
+          "labels.license"
+        ],
+        "version": [
+          "version"
+        ],
+        "description": [
+          "description"
+        ],
+        "name": [
+          "name"
+        ],
+        "url": [
+          "homepage"
+        ],
+        "email": [
+          "email"
+        ],
+        "developmentStatus": [
+          "maturity"
+        ]
+      }
+    },
     "cargo": {
       "source": "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/Cargo.csv",
       "format": "CodeMeta crosswalk: Cargo",
@@ -359,6 +401,9 @@
         "downloadUrl": [
           "related_identifiers.isIdenticalTo"
         ],
+        "softwareVersion": [
+          "version"
+        ],
         "author": [
           "creators"
         ],
@@ -396,6 +441,9 @@
         ],
         "issueTracker": [
           "related_identifiers.isSupplementedBy"
+        ],
+        "readme": [
+          "related_identifiers.isDocumentedBy"
         ]
       }
     }

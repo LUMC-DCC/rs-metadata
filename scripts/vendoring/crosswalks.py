@@ -78,6 +78,7 @@ def build_crosswalks(downloads: dict[str, Any]) -> dict[str, Any]:
 #: upstream table, and says so in its own provenance.
 CROSSWALK_SOURCES = {
     "cff-1.2.0": "crosswalk-cff",
+    "biotools": "crosswalk-biotools",
     "zenodo": "crosswalk-zenodo",
     "pyproject-pep621": "crosswalk-python",
     "package-json": "crosswalk-nodejs",

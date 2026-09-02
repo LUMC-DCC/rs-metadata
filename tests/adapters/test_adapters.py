@@ -439,6 +439,85 @@ def test_zenodo_version_does_not_trip_zenodos_own_stale_schema(repo, codemeta):
 
 
 # ---------------------------------------------------------------------------
+# biotools.json
+# ---------------------------------------------------------------------------
+
+
+BIOTOOLS = [
+    {
+        "name": "TestTool",
+        "description": "A tool used by the rs-metadata test suite.",
+        "homepage": "https://example-lumc.nl/testtool",
+        "version": ["1.0.0"],
+        "language": ["Python"],
+        "license": "Apache-2.0",
+        "toolType": ["Command-line tool"],
+        "function": [
+            {
+                "operation": [
+                    {
+                        "term": "Sequence alignment",
+                        "uri": "http://edamontology.org/operation_0292",
+                    }
+                ]
+            }
+        ],
+        "link": [
+            {
+                "url": "https://github.com/lumc-test/testtool",
+                "type": ["Repository"],
+            }
+        ],
+    }
+]
+
+
+def test_biotools_is_auto_detected_and_schema_validated(repo, codemeta):
+    report = repo(base(codemeta, **{"biotools.json": BIOTOOLS}))
+    assert source(report, "biotools").status == "parsed"
+    assert source(report, "biotools").format_version == "3.3.0"
+    assert "source.invalid" not in codes(report)
+
+
+def test_biotools_schema_violation_stops_comparison(repo, codemeta):
+    invalid = [{"name": "TestTool", "description": "Long enough to be valid."}]
+    report = repo(base(codemeta, **{"biotools.json": invalid}))
+    diagnostic = find(report, "source.invalid")
+    assert "homepage" in diagnostic.message
+    assert not [
+        item
+        for item in report.diagnostics
+        if item.code.startswith("consistency.")
+        and item.source is not None
+        and item.source.file == "biotools.json"
+    ]
+
+
+def test_biotools_uses_flattened_language_and_license_fields(repo, codemeta):
+    report = repo(base(codemeta, **{"biotools.json": BIOTOOLS}))
+    assert "consistency.mismatch" not in codes_for(report, "programmingLanguage")
+    assert "consistency.mismatch" not in codes_for(report, "license")
+
+
+def test_biotools_edam_operations_map_to_feature_list(repo, codemeta):
+    report = repo(base(codemeta, **{"biotools.json": BIOTOOLS}))
+    assert "consistency.mismatch" not in codes_for(report, "schema:featureList")
+
+
+def test_biotools_version_list_only_needs_to_contain_current_release(repo, codemeta):
+    document = json.loads(json.dumps(BIOTOOLS))
+    document[0]["version"] = ["0.9.0", "1.0.0"]
+    report = repo(base(codemeta, **{"biotools.json": document}))
+    assert "consistency.mismatch" not in codes_for(report, "version")
+
+
+def test_biotools_requires_the_schema_array_shape(repo, codemeta):
+    report = repo(base(codemeta, **{"biotools.json": BIOTOOLS[0]}))
+    diagnostic = find(report, "source.unreadable")
+    assert "array" in diagnostic.message
+
+
+# ---------------------------------------------------------------------------
 # Cargo.toml
 # ---------------------------------------------------------------------------
 

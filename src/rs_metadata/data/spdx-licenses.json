@@ -1,6 +1,6 @@
 {
-  "licenseListVersion": "e4c1f27",
-  "releaseDate": "2026-07-16T00:00:00Z",
+  "licenseListVersion": "b885de7",
+  "releaseDate": "2026-09-02T00:00:00Z",
   "licenses": {
     "0BSD": {
       "name": "BSD Zero Clause License",
@@ -307,6 +307,11 @@
       "deprecated": false,
       "osiApproved": false
     },
+    "BSD-2-Clause-pos-unchanged": {
+      "name": "BSD 2-Clause - position unchanged variant",
+      "deprecated": false,
+      "osiApproved": false
+    },
     "BSD-3-Clause": {
       "name": "BSD 3-Clause \"New\" or \"Revised\" License",
       "deprecated": false,
@@ -437,6 +442,11 @@
       "deprecated": false,
       "osiApproved": false
     },
+    "BSD-Source-Code-no-disclaimer": {
+      "name": "BSD Source Code Attribution - no disclaimer",
+      "deprecated": false,
+      "osiApproved": false
+    },
     "BSD-Source-beginning-file": {
       "name": "BSD Source Code Attribution - beginning of file variant",
       "deprecated": false,
@@ -451,6 +461,11 @@
       "name": "Systemics W3Works BSD variant license",
       "deprecated": false,
       "osiApproved": false
+    },
+    "BSD-ask-to-endorse": {
+      "name": "BSD - ask to endorse",
+      "deprecated": false,
+      "osiApproved": true
     },
     "BSL-1.0": {
       "name": "Boost Software License 1.0",
@@ -1219,6 +1234,11 @@
     },
     "FDK-AAC": {
       "name": "Fraunhofer FDK AAC Codec Library",
+      "deprecated": false,
+      "osiApproved": false
+    },
+    "FDK-MPEG-H": {
+      "name": "Fraunhofer FDK MPEG-H Software",
       "deprecated": false,
       "osiApproved": false
     },
@@ -3410,7 +3430,7 @@
     "curl": {
       "name": "curl License",
       "deprecated": false,
-      "osiApproved": false
+      "osiApproved": true
     },
     "cve-tou": {
       "name": "Common Vulnerability Enumeration ToU License",

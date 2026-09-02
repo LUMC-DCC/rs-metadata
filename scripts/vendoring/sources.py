@@ -123,7 +123,7 @@ SOURCES: dict[str, Source] = {
                 "main/jsonschema/biotoolsj.json"
             ),
             version="main",
-            license="CC-BY-4.0",
+            license="CC-BY-SA-4.0",
         ),
         # R ships the authoritative mapping from the license strings CRAN
         # accepts to SPDX identifiers, in the same file `tools::analyze_license`
@@ -167,6 +167,16 @@ SOURCES: dict[str, Source] = {
             url=(
                 "https://raw.githubusercontent.com/codemeta/codemeta/master/crosswalks/"
                 "Citation%20File%20Format%201.2.0.csv"
+            ),
+            version="master",
+            license="Apache-2.0",
+        ),
+        Source(
+            key="crosswalk-biotools",
+            label="CodeMeta crosswalk: bio.tools",
+            url=(
+                "https://raw.githubusercontent.com/codemeta/codemeta/master/"
+                "crosswalks/bio.tools.csv"
             ),
             version="master",
             license="Apache-2.0",

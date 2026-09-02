@@ -24,6 +24,7 @@ from __future__ import annotations
 from .classes import satisfies, schema_org_classes, subclasses
 from .documents import (
     PROJECT_OWNED_DATA,
+    biotools_schema,
     cff_schema,
     codemeta_crosswalks,
     codemeta_versions,
@@ -52,6 +53,7 @@ __all__ = [
     "PROJECT_OWNED_DATA",
     "agent_properties",
     "allows_text",
+    "biotools_schema",
     "cff_schema",
     "codemeta_crosswalks",
     "codemeta_terms",

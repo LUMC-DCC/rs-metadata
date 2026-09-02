@@ -51,16 +51,18 @@ flowchart LR
     S0[CITATION.cff]:::src --> N([normalized CodeMeta concepts]):::mid
     S1[github-repo.json]:::src --> N
     S2[.zenodo.json]:::src --> N
-    S3[pyproject.toml]:::src --> N
-    S4[package.json]:::src --> N
-    S5[DESCRIPTION]:::src --> N
-    S6[Cargo.toml]:::src --> N
-    S7[Project.toml]:::src --> N
-    S8[Dockerfile]:::src --> N
+    S3[biotools.json]:::src --> N
+    S4[pyproject.toml]:::src --> N
+    S5[package.json]:::src --> N
+    S6[DESCRIPTION]:::src --> N
+    S7[Cargo.toml]:::src --> N
+    S8[Project.toml]:::src --> N
+    S9[Dockerfile]:::src --> N
     CM[codemeta.json<br/><i>anchor</i>]:::anchor --> N
 
     S0 ~~~ S1 ~~~ S2 ~~~ S3 ~~~ S4
-    S5 ~~~ S6 ~~~ S7 ~~~ S8 ~~~ CM
+    S5 ~~~ S6 ~~~ S7 ~~~ S8 ~~~ S9
+    CM
 
     classDef src fill:#eef4fb,stroke:#5b8db8
     classDef anchor fill:#fdf1e2,stroke:#c98b34
@@ -73,6 +75,7 @@ flowchart LR
 | Citation File Format | `CITATION.cff` | yes |
 | GitHub repository metadata | `github-repo.json` | auto-detected |
 | Zenodo deposition metadata | `.zenodo.json` | auto-detected |
+| bio.tools metadata | `biotools.json` | auto-detected |
 | Python project metadata | `pyproject.toml` | auto-detected |
 | npm package metadata | `package.json` | auto-detected |
 | R package DESCRIPTION | `DESCRIPTION` | auto-detected |
