@@ -63,9 +63,7 @@ class BiotoolsAdapter(Adapter):
                 line=error.lineno,
             ) from error
         if not isinstance(document, list):
-            raise SourceError(
-                f"{relative} must contain an array of bio.tools records."
-            )
+            raise SourceError(f"{relative} must contain an array of bio.tools records.")
         return ParsedSource(
             adapter_id=self.id,
             file=relative,
@@ -166,9 +164,7 @@ class BiotoolsAdapter(Adapter):
         )
         self._add_credits(concepts, tool.get("credit"), (*base, "credit"))
 
-    def _add_topics(
-        self, concepts: ConceptMap, topics: Any, base: DocPath
-    ) -> None:
+    def _add_topics(self, concepts: ConceptMap, topics: Any, base: DocPath) -> None:
         for index, topic in enumerate(_objects(topics)):
             add(concepts, "keywords", topic.get("term"), (*base, index, "term"))
 
@@ -188,9 +184,7 @@ class BiotoolsAdapter(Adapter):
                     (*base, function_index, "operation", operation_index, key),
                 )
 
-    def _add_links(
-        self, concepts: ConceptMap, links: Any, base: DocPath
-    ) -> None:
+    def _add_links(self, concepts: ConceptMap, links: Any, base: DocPath) -> None:
         for index, link in enumerate(_objects(links)):
             roles = {
                 _LINK_CONCEPTS[kind]
@@ -217,9 +211,7 @@ class BiotoolsAdapter(Adapter):
                 (*base, index, "doi"),
             )
 
-    def _add_credits(
-        self, concepts: ConceptMap, credits: Any, base: DocPath
-    ) -> None:
+    def _add_credits(self, concepts: ConceptMap, credits: Any, base: DocPath) -> None:
         for index, credit in enumerate(_objects(credits)):
             agent = _as_agent(credit)
             roles = {
