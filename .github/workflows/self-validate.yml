@@ -20,7 +20,7 @@ jobs:
     # rs-metadata is research software, so it carries the metadata it asks of
     # everyone else and checks it with itself.
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: ./
         with:
           artifact-name: rs-metadata-self-report

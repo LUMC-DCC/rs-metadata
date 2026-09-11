@@ -21,7 +21,7 @@ jobs:
     # stale artifact means the source changed without the derived file being
     # rebuilt, so the build fails rather than shipping the mismatch.
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
       - name: Profile schema
