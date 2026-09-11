@@ -12,6 +12,7 @@
   "identifier": "https://github.com/LUMC-DCC/rs-metadata/tree/v1.0.0",
   "author": [
     {
+      "@id": "https://orcid.org/0000-0002-0852-4752",
       "@type": "Person",
       "givenName": "Mariia",
       "familyName": "Steeghs-Turchina",
@@ -24,9 +25,21 @@
   ],
   "maintainer": [
     {
+      "@id": "https://orcid.org/0000-0002-0852-4752",
       "@type": "Person",
       "givenName": "Mariia",
       "familyName": "Steeghs-Turchina",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://ror.org/05xvt9f17",
+        "name": "Leiden University Medical Center"
+      }
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-9839-5439",
+      "@type": "Person",
+      "givenName": "Anna",
+      "familyName": "Niehues",
       "affiliation": {
         "@type": "Organization",
         "@id": "https://ror.org/05xvt9f17",
@@ -39,7 +52,6 @@
   "url": "https://lumc-dcc.github.io/rs-metadata/",
   "issueTracker": "https://github.com/LUMC-DCC/rs-metadata/issues",
   "continuousIntegration": "https://github.com/LUMC-DCC/rs-metadata/actions",
-  "releaseNotes": "https://github.com/LUMC-DCC/rs-metadata/blob/main/CHANGELOG.md",
   "softwareHelp": [
     {
       "@type": "CreativeWork",
@@ -52,7 +64,7 @@
     {
       "@type": "ComputerLanguage",
       "name": "Python",
-      "version": ">=3.10"
+      "version": ">=3.11"
     }
   ],
   "runtimePlatform": [

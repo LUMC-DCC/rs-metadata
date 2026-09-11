@@ -13,6 +13,7 @@ authors:
   - family-names: Steeghs-Turchina
     given-names: Mariia
     affiliation: Leiden University Medical Center
+    orcid: https://orcid.org/0000-0002-0852-4752
 version: "1.0.0"
 repository-code: https://github.com/LUMC-DCC/rs-metadata
 url: https://lumc-dcc.github.io/rs-metadata/
