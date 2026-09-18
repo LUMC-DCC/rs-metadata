@@ -31,7 +31,7 @@ authors = [{ name = "Mariia Steeghs-Turchina" }]
 
 dependencies = [
     "jsonschema>=4.21,<5",
-    "nameparser>=2.2.0",
+    "nameparser>=2.3.0",
     "packaging>=23.0",
     "pyyaml>=6.0,<7",
 ]
@@ -74,7 +74,7 @@ sphinxcontrib-mermaid = ">=2.1.1"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0"
 pytest-cov = ">=5.0"
-ruff = ">=0.16.6"
+ruff = ">=0.16.7"
 mypy = ">=2.3.1"
 types-pyyaml = ">=6.0.12.20260906"
 types-jsonschema = ">=4.21"
