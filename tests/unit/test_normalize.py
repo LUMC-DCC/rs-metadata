@@ -387,6 +387,10 @@ def test_empty_values_normalize_to_none():
     ("written", "expected"),
     [
         ("Jane Doe", ("Jane", "Doe")),
+        # Keep middle names and suffixes when using nameparser's parsed fields,
+        # but leave honorifics out of the comparable name.
+        ("Dr. Jane Alice Doe Jr.", ("Jane Alice", "Doe Jr.")),
+        ("Jane A. van der Berg III", ("Jane A.", "van der Berg III")),
         # Particles belong with the family name, across locales. The hand-written
         # prefix list this replaced handled the Dutch and German cases only.
         ("Jan van der Berg", ("Jan", "van der Berg")),

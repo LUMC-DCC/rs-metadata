@@ -17,7 +17,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from nameparser import HumanName
+from nameparser import parse
 
 from .identifiers import extract_orcid
 from .scalars import as_list, normalize_text
@@ -114,9 +114,9 @@ def split_full_name(full: str) -> tuple[str | None, str | None]:
         return given.strip() or None, family.strip() or None
     if " " not in text:
         return None, text
-    parsed = HumanName(text)
-    family = " ".join(part for part in (parsed.last, parsed.suffix) if part).strip()
-    given = " ".join(part for part in (parsed.first, parsed.middle) if part).strip()
+    parsed = parse(text)
+    family = " ".join(part for part in (parsed.family, parsed.suffix) if part).strip()
+    given = " ".join(part for part in (parsed.given, parsed.middle) if part).strip()
     return given or None, family or None
 
 
